@@ -67,12 +67,19 @@ return Promise.resolve()
       plugins: [
         sourcemaps(),
         nodeResolve(),
-        commonjs({ namedExports: {
-          // list of lodash functions used by your library
-          'node_modules/lodash/index.js': [
-            'cloneDeep', 'cloneDeepWith', 'filter', 'isEqual', 'map', 'uniqueId'
-          ]
-        } })
+        commonjs(
+            {
+                include: [
+                    'node_modules/**'
+                ],
+                namedExports: {
+                    // list of lodash functions used by your library
+                    'node_modules/lodash/lodash.js': [
+                        'cloneDeep', 'cloneDeepWith', 'filter', 'isEqual', 'map', 'uniqueId'
+                    ]
+                }
+            }
+        )
       ],
       onwarn: function (warning) {
         if (warning.code === 'THIS_IS_UNDEFINED') return;
@@ -95,7 +102,7 @@ return Promise.resolve()
           '@angular/platform-browser': 'ng.platformBrowser',
           'ajv': 'Ajv',
           'hammerjs': 'hammerjs',
-          'lodash': '_',
+          'lodash': 'lodash',
           'rxjs': 'rxjs'
         }
       }
@@ -126,7 +133,7 @@ return Promise.resolve()
       output: Object.assign({}, rollupBaseConfig.output, {
         file: path.join(distFolder, `${libName}.es5.js`),
         format: 'es',
-        intro: `import * as Ajv from 'ajv';\nimport * as _ from 'lodash';`
+        intro: `import * as Ajv from 'ajv';`
       })
     });
 

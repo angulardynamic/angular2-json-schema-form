@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, Input, OnChanges, OnInit } from '@angular/core';
 
-import * as _ from 'lodash';
+import { cloneDeep, map } from 'lodash';
 
 import { JsonSchemaFormService } from '../../json-schema-form.service';
 import {
@@ -140,10 +140,10 @@ export class Bootstrap3FrameworkComponent implements OnInit, OnChanges {
 
   initializeFramework() {
     if (this.layoutNode) {
-      this.options = _.cloneDeep(this.layoutNode.options);
+      this.options = cloneDeep(this.layoutNode.options);
       this.widgetLayoutNode = {
         ...this.layoutNode,
-        options: _.cloneDeep(this.layoutNode.options)
+        options: cloneDeep(this.layoutNode.options)
       };
       this.widgetOptions = this.widgetLayoutNode.options;
       this.formControl = this.jsf.getFormControl(this);
@@ -261,7 +261,7 @@ export class Bootstrap3FrameworkComponent implements OnInit, OnChanges {
 
         if (this.options.debug) {
           let vars: any[] = [];
-          this.debugOutput = _.map(vars, thisVar => JSON.stringify(thisVar, null, 2)).join('\n');
+          this.debugOutput = map(vars, thisVar => JSON.stringify(thisVar, null, 2)).join('\n');
         }
       }
       this.frameworkInitialized = true;
