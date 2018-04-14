@@ -1,11 +1,13 @@
 import {
   ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter,
-  forwardRef, Input, Output, OnChanges, OnInit
+  forwardRef, Input, Output, OnChanges, OnInit, SimpleChanges
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 import * as _ from 'lodash';
+
+import { cloneDeep } from 'lodash/';
 
 import { FrameworkLibraryService } from './framework-library/framework-library.service';
 import { WidgetLibraryService } from './widget-library/widget-library.service';
@@ -174,8 +176,11 @@ export class JsonSchemaFormComponent implements ControlValueAccessor, OnChanges,
     this.updateForm();
   }
 
-  ngOnChanges() {
-    this.updateForm();
+  ngOnChanges(changes: SimpleChanges) {
+    if (!_.isEqual(changes.data.currentValue, changes.data.previousValue))
+    {
+      this.updateForm();
+    }
   }
 
   writeValue(value: any) {
@@ -211,7 +216,7 @@ export class JsonSchemaFormComponent implements ControlValueAccessor, OnChanges,
       // Get names of changed inputs
       let changedInput = Object.keys(this.previousInputs)
         .filter(input => this.previousInputs[input] !== this[input]);
-      let resetFirst = true;
+      let resetFirst = false;
       if (changedInput.length === 1 && changedInput[0] === 'form' &&
         this.formValuesInput.startsWith('form.')
       ) {
@@ -245,7 +250,7 @@ export class JsonSchemaFormComponent implements ControlValueAccessor, OnChanges,
     }
   }
 
-  setFormValues(formValues: any, resetFirst = true) {
+  setFormValues(formValues: any, resetFirst = false) {
     if (formValues) {
       let newFormValues = this.objectWrap ? formValues['1'] : formValues;
       if (!this.jsf.formGroup) {
