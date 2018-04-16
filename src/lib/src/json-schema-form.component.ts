@@ -175,7 +175,19 @@ export class JsonSchemaFormComponent implements ControlValueAccessor, OnChanges,
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (!isEqual(changes.data.currentValue, changes.data.previousValue)) {
+    console.log('ngOnChanges', changes);
+    let update = false;
+
+    Object.keys(changes).forEach(function(key) {
+        let change = changes[key];
+
+        if (!isEqual(change.currentValue, change.previousValue)) {
+            update = true;
+        } else {
+        }
+    });
+
+    if (update) {
       this.updateForm();
     }
   }
@@ -201,6 +213,7 @@ export class JsonSchemaFormComponent implements ControlValueAccessor, OnChanges,
   }
 
   updateForm() {
+    console.log('JsonSchemaFormComponent.updateForm()', this.jsf.formValues);
     if (!this.formInitialized || !this.formValuesInput ||
       (this.language && this.language !== this.jsf.language)
     ) {
@@ -214,6 +227,10 @@ export class JsonSchemaFormComponent implements ControlValueAccessor, OnChanges,
       let changedInput = Object.keys(this.previousInputs)
         .filter(input => this.previousInputs[input] !== this[input]);
       let resetFirst = false;
+
+      if (isEmpty(this.jsf.formValues))  {
+          resetFirst = true;
+      }
       if (changedInput.length === 1 && changedInput[0] === 'form' &&
         this.formValuesInput.startsWith('form.')
       ) {
@@ -227,14 +244,17 @@ export class JsonSchemaFormComponent implements ControlValueAccessor, OnChanges,
       // If only input values have changed, update the form values
       if (changedInput.length === 1 && changedInput[0] === this.formValuesInput) {
         if (this.formValuesInput.indexOf('.') === -1) {
+            console.log('       if this.formValuesInput.indexOf');
           this.setFormValues(this[this.formValuesInput], resetFirst);
         } else {
+            console.log('       else this.formValuesInput.indexOf');
           const [input, key] = this.formValuesInput.split('.');
           this.setFormValues(this[input][key], resetFirst);
         }
 
       // If anything else has changed, re-render the entire form
       } else if (changedInput.length) {
+        console.log('   changedInput.length');
         this.initializeForm();
         if (this.onChange) { this.onChange(this.jsf.formValues); }
         if (this.onTouched) { this.onTouched(this.jsf.formValues); }
@@ -292,12 +312,13 @@ export class JsonSchemaFormComponent implements ControlValueAccessor, OnChanges,
    *   the Angular formGroup used to control the reactive form.
    */
   initializeForm() {
+    console.log('JsonSchemaFormComponent.initializeForm()');
     if (
       this.schema || this.layout || this.data || this.form || this.model ||
       this.JSONSchema || this.UISchema || this.formData || this.ngModel ||
       this.jsf.data
     ) {
-
+        console.log('   if');
       this.jsf.resetAllValues();  // Reset all form values to defaults
       this.initializeOptions();   // Update options
       this.initializeSchema();    // Update schema, schemaRefLibrary,
@@ -408,6 +429,10 @@ export class JsonSchemaFormComponent implements ControlValueAccessor, OnChanges,
    */
   private initializeSchema() {
 
+    console.log('JsonSchemaFormComponent.initializeSchema()', 'this.ngModel',
+        this.ngModel, 'this.jsf.formValues', this.jsf.formValues,
+        'this.jsf.schema', this.jsf.schema, 'this.data', this.data,
+        'this.schema', this.schema, 'this.form', this.form);
     // TODO: update to allow non-object schemas
 
     if (isObject(this.schema)) {
@@ -425,6 +450,24 @@ export class JsonSchemaFormComponent implements ControlValueAccessor, OnChanges,
       this.jsf.schema = cloneDeep(this.form);
     } else if (isObject(this.form)) {
       // TODO: Handle other types of form input
+    } else if (hasValue(this.ngModel)) {
+        console.log(' hasValue(ngModel)');
+        let schema = {};
+        if (typeof this.ngModel === 'object') {
+            schema['type'] = 'object';
+        } else if (isArray(this.ngModel)) {
+            schema['type'] = 'array';
+        }
+
+        schema['properties'] = {};
+        Object.keys(this.ngModel).forEach((key) => {
+            // console.log("   key:", key);
+            schema['properties'][key] = {};
+            // console.log("   schema.properties[key]", schema.properties[key]);
+            // console.log("   typeof this.ngModel[key]:", typeof _ngModel[key])
+            schema['properties'][key].type = (typeof this.ngModel[key]);
+        });
+        this.jsf.schema = schema;
     }
 
     if (!isEmpty(this.jsf.schema)) {
@@ -484,6 +527,7 @@ export class JsonSchemaFormComponent implements ControlValueAccessor, OnChanges,
       //     this.jsf.schemaRecursiveRefMap, this.jsf.dataRecursiveRefMap
       //   ));
     }
+    console.log('    this.jsf.schema',  this.jsf.schema);
   }
 
   /**

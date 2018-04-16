@@ -8143,7 +8143,17 @@ var JsonSchemaFormComponent = (function () {
         this.updateForm();
     };
     JsonSchemaFormComponent.prototype.ngOnChanges = function (changes) {
-        if (!lodash.isEqual(changes.data.currentValue, changes.data.previousValue)) {
+        console.log('ngOnChanges', changes);
+        var update = false;
+        Object.keys(changes).forEach(function (key) {
+            var change = changes[key];
+            if (!lodash.isEqual(change.currentValue, change.previousValue)) {
+                update = true;
+            }
+            else {
+            }
+        });
+        if (update) {
             this.updateForm();
         }
     };
@@ -8167,6 +8177,7 @@ var JsonSchemaFormComponent = (function () {
     };
     JsonSchemaFormComponent.prototype.updateForm = function () {
         var _this = this;
+        console.log('JsonSchemaFormComponent.updateForm()', this.jsf.formValues);
         if (!this.formInitialized || !this.formValuesInput ||
             (this.language && this.language !== this.jsf.language)) {
             this.initializeForm();
@@ -8178,6 +8189,9 @@ var JsonSchemaFormComponent = (function () {
             var changedInput = Object.keys(this.previousInputs)
                 .filter(function (input) { return _this.previousInputs[input] !== _this[input]; });
             var resetFirst = false;
+            if (isEmpty(this.jsf.formValues)) {
+                resetFirst = true;
+            }
             if (changedInput.length === 1 && changedInput[0] === 'form' &&
                 this.formValuesInput.startsWith('form.')) {
                 changedInput = Object.keys(this.previousInputs.form || {})
@@ -8187,14 +8201,17 @@ var JsonSchemaFormComponent = (function () {
             }
             if (changedInput.length === 1 && changedInput[0] === this.formValuesInput) {
                 if (this.formValuesInput.indexOf('.') === -1) {
+                    console.log('       if this.formValuesInput.indexOf');
                     this.setFormValues(this[this.formValuesInput], resetFirst);
                 }
                 else {
+                    console.log('       else this.formValuesInput.indexOf');
                     var _a = this.formValuesInput.split('.'), input = _a[0], key = _a[1];
                     this.setFormValues(this[input][key], resetFirst);
                 }
             }
             else if (changedInput.length) {
+                console.log('   changedInput.length');
                 this.initializeForm();
                 if (this.onChange) {
                     this.onChange(this.jsf.formValues);
@@ -8238,9 +8255,11 @@ var JsonSchemaFormComponent = (function () {
         this.onSubmit.emit(this.objectWrap ? validData['1'] : validData);
     };
     JsonSchemaFormComponent.prototype.initializeForm = function () {
+        console.log('JsonSchemaFormComponent.initializeForm()');
         if (this.schema || this.layout || this.data || this.form || this.model ||
             this.JSONSchema || this.UISchema || this.formData || this.ngModel ||
             this.jsf.data) {
+            console.log('   if');
             this.jsf.resetAllValues();
             this.initializeOptions();
             this.initializeSchema();
@@ -8288,6 +8307,8 @@ var JsonSchemaFormComponent = (function () {
         }
     };
     JsonSchemaFormComponent.prototype.initializeSchema = function () {
+        var _this = this;
+        console.log('JsonSchemaFormComponent.initializeSchema()', 'this.ngModel', this.ngModel, 'this.jsf.formValues', this.jsf.formValues, 'this.jsf.schema', this.jsf.schema, 'this.data', this.data, 'this.schema', this.schema, 'this.form', this.form);
         if (isObject$1(this.schema)) {
             this.jsf.AngularSchemaFormCompatibility = true;
             this.jsf.schema = lodash.cloneDeep(this.schema);
@@ -8307,6 +8328,22 @@ var JsonSchemaFormComponent = (function () {
             this.jsf.schema = lodash.cloneDeep(this.form);
         }
         else if (isObject$1(this.form)) {
+        }
+        else if (hasValue(this.ngModel)) {
+            console.log(' hasValue(ngModel)');
+            var schema_1 = {};
+            if (typeof this.ngModel === 'object') {
+                schema_1['type'] = 'object';
+            }
+            else if (isArray$2(this.ngModel)) {
+                schema_1['type'] = 'array';
+            }
+            schema_1['properties'] = {};
+            Object.keys(this.ngModel).forEach(function (key) {
+                schema_1['properties'][key] = {};
+                schema_1['properties'][key].type = (typeof _this.ngModel[key]);
+            });
+            this.jsf.schema = schema_1;
         }
         if (!isEmpty(this.jsf.schema)) {
             if (inArray('object', this.jsf.schema.type)) {
@@ -8340,6 +8377,7 @@ var JsonSchemaFormComponent = (function () {
                 this.jsf.hasRootReference = true;
             }
         }
+        console.log('    this.jsf.schema', this.jsf.schema);
     };
     JsonSchemaFormComponent.prototype.initializeData = function () {
         if (hasValue(this.data)) {

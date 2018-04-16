@@ -418,7 +418,7 @@ export function formatFormData(
         // If returnEmptyFields === false,
         // only add empty arrays and objects to required keys
         } else if (schemaType === 'object' && !returnEmptyFields) {
-          if (!Array.from(dataMap.keys()).some((item) => {return item.includes(dataPointer + '/') })) {
+          if (!Array.from(dataMap.keys()).some((item) => {return item.includes(dataPointer + '/'); })) {
             JsonPointer.set(formattedData, dataPointer, value);
           }
 

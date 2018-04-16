@@ -6,8 +6,8 @@ import {
   MatAutocompleteModule, MatButtonModule, MatButtonToggleModule, MatCardModule,
   MatCheckboxModule, MatChipsModule, MatDatepickerModule, MatExpansionModule,
   MatFormFieldModule, MatIconModule, MatInputModule, MatNativeDateModule,
-  MatRadioModule, MatSelectModule, MatSliderModule, MatSlideToggleModule,
-  MatStepperModule, MatTabsModule, MatTooltipModule,
+  MatRadioModule, MatSelectModule, MatSliderModule, MatSlideToggleModule, MatStepperModule,
+  MatTabsModule, MatTooltipModule,
 } from '@angular/material';
 export const ANGULAR_MATERIAL_MODULES = [
   MatAutocompleteModule, MatButtonModule, MatButtonToggleModule, MatCardModule,

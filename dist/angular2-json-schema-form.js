@@ -8201,7 +8201,17 @@ class JsonSchemaFormComponent {
         this.updateForm();
     }
     ngOnChanges(changes) {
-        if (!isEqual(changes.data.currentValue, changes.data.previousValue)) {
+        console.log('ngOnChanges', changes);
+        let update = false;
+        Object.keys(changes).forEach(function (key) {
+            let change = changes[key];
+            if (!isEqual(change.currentValue, change.previousValue)) {
+                update = true;
+            }
+            else {
+            }
+        });
+        if (update) {
             this.updateForm();
         }
     }
@@ -8224,6 +8234,7 @@ class JsonSchemaFormComponent {
         }
     }
     updateForm() {
+        console.log('JsonSchemaFormComponent.updateForm()', this.jsf.formValues);
         if (!this.formInitialized || !this.formValuesInput ||
             (this.language && this.language !== this.jsf.language)) {
             this.initializeForm();
@@ -8235,6 +8246,9 @@ class JsonSchemaFormComponent {
             let changedInput = Object.keys(this.previousInputs)
                 .filter(input => this.previousInputs[input] !== this[input]);
             let resetFirst = false;
+            if (isEmpty(this.jsf.formValues)) {
+                resetFirst = true;
+            }
             if (changedInput.length === 1 && changedInput[0] === 'form' &&
                 this.formValuesInput.startsWith('form.')) {
                 changedInput = Object.keys(this.previousInputs.form || {})
@@ -8244,14 +8258,17 @@ class JsonSchemaFormComponent {
             }
             if (changedInput.length === 1 && changedInput[0] === this.formValuesInput) {
                 if (this.formValuesInput.indexOf('.') === -1) {
+                    console.log('       if this.formValuesInput.indexOf');
                     this.setFormValues(this[this.formValuesInput], resetFirst);
                 }
                 else {
+                    console.log('       else this.formValuesInput.indexOf');
                     const [input, key] = this.formValuesInput.split('.');
                     this.setFormValues(this[input][key], resetFirst);
                 }
             }
             else if (changedInput.length) {
+                console.log('   changedInput.length');
                 this.initializeForm();
                 if (this.onChange) {
                     this.onChange(this.jsf.formValues);
@@ -8294,9 +8311,11 @@ class JsonSchemaFormComponent {
         this.onSubmit.emit(this.objectWrap ? validData['1'] : validData);
     }
     initializeForm() {
+        console.log('JsonSchemaFormComponent.initializeForm()');
         if (this.schema || this.layout || this.data || this.form || this.model ||
             this.JSONSchema || this.UISchema || this.formData || this.ngModel ||
             this.jsf.data) {
+            console.log('   if');
             this.jsf.resetAllValues();
             this.initializeOptions();
             this.initializeSchema();
@@ -8343,6 +8362,7 @@ class JsonSchemaFormComponent {
         }
     }
     initializeSchema() {
+        console.log('JsonSchemaFormComponent.initializeSchema()', 'this.ngModel', this.ngModel, 'this.jsf.formValues', this.jsf.formValues, 'this.jsf.schema', this.jsf.schema, 'this.data', this.data, 'this.schema', this.schema, 'this.form', this.form);
         if (isObject$1(this.schema)) {
             this.jsf.AngularSchemaFormCompatibility = true;
             this.jsf.schema = cloneDeep(this.schema);
@@ -8362,6 +8382,22 @@ class JsonSchemaFormComponent {
             this.jsf.schema = cloneDeep(this.form);
         }
         else if (isObject$1(this.form)) {
+        }
+        else if (hasValue(this.ngModel)) {
+            console.log(' hasValue(ngModel)');
+            let schema = {};
+            if (typeof this.ngModel === 'object') {
+                schema['type'] = 'object';
+            }
+            else if (isArray$2(this.ngModel)) {
+                schema['type'] = 'array';
+            }
+            schema['properties'] = {};
+            Object.keys(this.ngModel).forEach((key) => {
+                schema['properties'][key] = {};
+                schema['properties'][key].type = (typeof this.ngModel[key]);
+            });
+            this.jsf.schema = schema;
         }
         if (!isEmpty(this.jsf.schema)) {
             if (inArray('object', this.jsf.schema.type)) {
@@ -8395,6 +8431,7 @@ class JsonSchemaFormComponent {
                 this.jsf.hasRootReference = true;
             }
         }
+        console.log('    this.jsf.schema', this.jsf.schema);
     }
     initializeData() {
         if (hasValue(this.data)) {
