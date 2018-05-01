@@ -20,6 +20,7 @@ import { JsonPointer } from './shared/jsonpointer.functions';
 
 export const JSON_SCHEMA_FORM_VALUE_ACCESSOR: any = {
   provide: NG_VALUE_ACCESSOR,
+  // tslint:disable-next-line no-use-before-declare
   useExisting: forwardRef(() => JsonSchemaFormComponent),
   multi: true,
 };
@@ -125,14 +126,16 @@ export class JsonSchemaFormComponent implements ControlValueAccessor, OnChanges,
   @Input()
   get value(): any {
     return this.objectWrap ? this.jsf.data['1'] : this.jsf.data;
-  };
+  }
   set value(value: any) {
     this.setFormValues(value, false);
   }
 
   // Outputs
+  // tslint:disable no-output-on-prefix
   @Output() onChanges = new EventEmitter<any>(); // Live unvalidated internal form data
   @Output() onSubmit = new EventEmitter<any>(); // Complete validated form data
+  // tslint:enable no-output-on-prefix
   @Output() isValid = new EventEmitter<boolean>(); // Is current data valid?
   @Output() validationErrors = new EventEmitter<any>(); // Validation errors (if any)
   @Output() formSchema = new EventEmitter<any>(); // Final schema used to create form
@@ -175,7 +178,6 @@ export class JsonSchemaFormComponent implements ControlValueAccessor, OnChanges,
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log('ngOnChanges', changes);
     let update = false;
 
     Object.keys(changes).forEach(function(key) {
@@ -213,7 +215,6 @@ export class JsonSchemaFormComponent implements ControlValueAccessor, OnChanges,
   }
 
   updateForm() {
-    console.log('JsonSchemaFormComponent.updateForm()', this.jsf.formValues);
     if (!this.formInitialized || !this.formValuesInput ||
       (this.language && this.language !== this.jsf.language)
     ) {
@@ -244,17 +245,14 @@ export class JsonSchemaFormComponent implements ControlValueAccessor, OnChanges,
       // If only input values have changed, update the form values
       if (changedInput.length === 1 && changedInput[0] === this.formValuesInput) {
         if (this.formValuesInput.indexOf('.') === -1) {
-            console.log('       if this.formValuesInput.indexOf');
           this.setFormValues(this[this.formValuesInput], resetFirst);
         } else {
-            console.log('       else this.formValuesInput.indexOf');
           const [input, key] = this.formValuesInput.split('.');
           this.setFormValues(this[input][key], resetFirst);
         }
 
       // If anything else has changed, re-render the entire form
       } else if (changedInput.length) {
-        console.log('   changedInput.length');
         this.initializeForm();
         if (this.onChange) { this.onChange(this.jsf.formValues); }
         if (this.onTouched) { this.onTouched(this.jsf.formValues); }
@@ -269,7 +267,7 @@ export class JsonSchemaFormComponent implements ControlValueAccessor, OnChanges,
 
   setFormValues(formValues: any, resetFirst = false) {
     if (formValues) {
-      let newFormValues = this.objectWrap ? formValues['1'] : formValues;
+      const newFormValues = this.objectWrap ? formValues['1'] : formValues;
       if (!this.jsf.formGroup) {
         this.jsf.formValues = formValues;
         this.activateForm();
@@ -312,13 +310,12 @@ export class JsonSchemaFormComponent implements ControlValueAccessor, OnChanges,
    *   the Angular formGroup used to control the reactive form.
    */
   initializeForm() {
-    console.log('JsonSchemaFormComponent.initializeForm()');
     if (
       this.schema || this.layout || this.data || this.form || this.model ||
       this.JSONSchema || this.UISchema || this.formData || this.ngModel ||
       this.jsf.data
     ) {
-        console.log('   if');
+
       this.jsf.resetAllValues();  // Reset all form values to defaults
       this.initializeOptions();   // Update options
       this.initializeSchema();    // Update schema, schemaRefLibrary,
@@ -402,7 +399,7 @@ export class JsonSchemaFormComponent implements ControlValueAccessor, OnChanges,
     this.frameworkLibrary.setFramework(framework);
     this.jsf.framework = this.frameworkLibrary.getFramework();
     if (isObject(this.jsf.formOptions.widgets)) {
-      for (let widget of Object.keys(this.jsf.formOptions.widgets)) {
+      for (const widget of Object.keys(this.jsf.formOptions.widgets)) {
         this.widgetLibrary.registerWidget(widget, this.jsf.formOptions.widgets[widget]);
       }
     }
@@ -527,7 +524,6 @@ export class JsonSchemaFormComponent implements ControlValueAccessor, OnChanges,
       //     this.jsf.schemaRecursiveRefMap, this.jsf.dataRecursiveRefMap
       //   ));
     }
-    console.log('    this.jsf.schema',  this.jsf.schema);
   }
 
   /**
@@ -610,7 +606,7 @@ export class JsonSchemaFormComponent implements ControlValueAccessor, OnChanges,
         }, 'top-down');
       }
       return layout;
-    }
+    };
 
     // Check for layout inputs and, if found, initialize form layout
     if (isArray(this.layout)) {

@@ -1,18 +1,22 @@
 {
   "compilerOptions": {
-    "target": "es5",
     "module": "es2015",
-    "moduleResolution": "node",
     "sourceMap": true,
-    "inlineSources": true,
     "declaration": true,
-    "experimentalDecorators": true,
+    "inlineSources": true,
     "removeComments": true,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "es5",
     "suppressImplicitAnyIndexErrors": true,
     "skipLibCheck": true,
     "stripInternal": true,
-    "lib": [ "es2015", "dom", "es7" ],
-    "emitDecoratorMetadata": true,
+    "lib": [
+    	"es2015",
+	"dom",
+	"es7"
+    ],
     "allowSyntheticDefaultImports": true
   },
   "atom": {
