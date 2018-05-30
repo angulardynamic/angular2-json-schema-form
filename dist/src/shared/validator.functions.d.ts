@@ -1,5 +1,5 @@
 import { AbstractControl } from '@angular/forms';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 export declare type SchemaPrimitiveType = 'string' | 'number' | 'integer' | 'boolean' | 'null';
 export declare type SchemaType = 'string' | 'number' | 'integer' | 'boolean' | 'null' | 'object' | 'array';
 export declare type JavaScriptPrimitiveType = 'string' | 'number' | 'boolean' | 'null' | 'undefined';

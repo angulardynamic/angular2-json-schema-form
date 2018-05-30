@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AbstractControl, FormArray, FormGroup } from '@angular/forms';
+import { Subject } from 'rxjs';
 import { filter } from 'rxjs/operators/filter';
-import { Subject } from 'rxjs/Subject';
 
 import * as Ajv from 'ajv';
 import { cloneDeep, isEqual } from 'lodash';

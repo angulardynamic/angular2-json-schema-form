@@ -124,7 +124,7 @@ return Promise.resolve()
         file: path.join(distFolder, `bundles`, `${libName}.umd.min.js`),
         format: 'umd'
       }),
-      plugins: rollupBaseConfig.plugins.concat([uglify({})])
+      //plugins: rollupBaseConfig.plugins.concat([uglify({})])
     });
 
     // ESM+ES5 flat module bundle

@@ -15,6 +15,9 @@
     "Angular5",
     "Angular 5",
     "ng5",
+    "Angular6",
+    "Angular 6",
+    "ng6",
     "JSON Schema",
     "form",
     "forms",
@@ -33,17 +36,12 @@
   "es2015": "./angular2-json-schema-form.js",
   "typings": "./angular2-json-schema-form.d.ts",
   "dependencies": {
-    "ajv": "^6.0.1",
-    "lodash": "^4.17.5",
-    "rxjs": ">=5.0.0"
+    "ajv": "^6.4.0",
+    "lodash": "4.x",
+    "rxjs-compat": "^6.0.0-rc.0"
   },
   "peerDependencies": {
-    "@angular/cdk": ">=5.0.0",
-    "@angular/common": ">=4.0.0",
-    "@angular/core": ">=4.0.0",
-    "@angular/flex-layout": ">=2.0.0",
-    "@angular/forms": ">=4.0.0",
-    "@angular/material": ">=5.0.0",
-    "@angular/platform-browser": ">=4.0.0"
+    "@angular/common": "^6.0.0",
+    "@angular/flex-layout": "6.0.0-beta.15"
   }
 }

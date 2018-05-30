@@ -1,5 +1,5 @@
 import { AbstractControl, FormArray, FormGroup } from '@angular/forms';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 export interface TitleMapItem {
     name?: string;
     value?: any;

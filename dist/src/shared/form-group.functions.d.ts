@@ -1,20 +1,18 @@
 import { AbstractControl } from '@angular/forms';
 import { Pointer } from './jsonpointer.functions';
 export declare function buildFormGroupTemplate(jsf: any, nodeValue?: any, setValues?: boolean, schemaPointer?: string, dataPointer?: string, templatePointer?: string): {
-    controlType: "FormGroup";
+    controlType: string;
     controls: any;
     validators: any;
+    value?: undefined;
 } | {
-    controlType: "FormArray";
-    controls: any;
-    validators: any;
-} | {
-    controlType: "FormControl";
+    controlType: string;
     value: {
         value: any;
         disabled: any;
     };
     validators: any;
+    controls?: undefined;
 };
 export declare function buildFormGroup(template: any): AbstractControl;
 export declare function mergeValues(...valuesToMerge: any[]): any;
