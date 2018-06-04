@@ -1,7 +1,7 @@
 {
   "name": "angular2-json-schema-form",
   "version": "0.7.0-alpha.1",
-  "main": "src/public_api.ts",
+  "main": "public_api.ts",
   "peerDependencies": {
     "@angular/cdk": "^6.0.0-rc.12",
     "@angular/common": "^6.0.0-rc.0 || ^6.0.0",
