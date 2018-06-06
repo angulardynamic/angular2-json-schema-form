@@ -161,6 +161,20 @@
         (validationErrors)="validationErrors($event)">
       </json-schema-form>
 
+
+       <!-- This is selector will use when drag and drop add ! -->
+      <!-- <json-schema-form-editor
+      *ngIf="formActive"
+      loadExternalAssets="true"
+      [form]="jsonFormObject"
+      [options]="jsonFormOptions"
+      [framework]="selectedFramework"
+      [language]="selectedLanguage"
+      (onChanges)="onChanges($event)"
+      (onSubmit)="onSubmit($event)"
+      (isValid)="isValid($event)"
+      (validationErrors)="validationErrors($event)">
+    </json-schema-form-editor> -->
     </div>
     <hr>
     <h4 class="default-cursor" (click)="toggleVisible('output')">

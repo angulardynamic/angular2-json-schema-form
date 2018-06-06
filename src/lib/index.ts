@@ -31,6 +31,7 @@ export { dateToString, stringToDate, findDate } from './src/shared/date.function
 export { OrderableDirective } from './src/shared/orderable.directive';
 
 export { JsonSchemaFormComponent } from './src/json-schema-form.component';
+export { JsonSchemaFormEditorComponent } from './src/json-schema-form-editor.component';
 export { JsonSchemaFormService } from './src/json-schema-form.service';
 export { JsonSchemaFormModule } from './src/json-schema-form.module';
 
