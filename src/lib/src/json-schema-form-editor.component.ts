@@ -7,8 +7,8 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 import { cloneDeep, isEqual } from 'lodash';
 
-import { FrameworkLibraryService } from './framework-library/framework-library.service';
-import { WidgetLibraryService } from './widget-library/widget-library.service';
+import { FrameworkEditorLibraryService } from './framework-library/framework-editor-library.service';
+import { WidgetEditorLibraryService } from './widget-editor-library/widget-editor-library.service';
 import { JsonSchemaFormService } from './json-schema-form.service';
 import { convertSchemaToDraft6 } from './shared/convert-schema-to-draft6.function';
 import { resolveSchemaReferences } from './shared/json-schema.functions';
@@ -18,12 +18,12 @@ import {
 import { forEach, hasOwn } from './shared/utility.functions';
 import { JsonPointer } from './shared/jsonpointer.functions';
 
-export const JSON_SCHEMA_FORM_VALUE_ACCESSOR: any = {
-  provide: NG_VALUE_ACCESSOR,
-  // tslint:disable-next-line no-use-before-declare
-  useExisting: forwardRef(() => JsonSchemaFormEditorComponent),
-  multi: true,
-};
+// export const JSON_SCHEMA_FORM_VALUE_ACCESSOR: any = {
+//   provide: NG_VALUE_ACCESSOR,
+//   // tslint:disable-next-line no-use-before-declare
+//   useExisting: forwardRef(() => JsonSchemaFormEditorComponent),
+//   multi: true,
+// };
 
 /**
  * @module 'JsonSchemaFormEditorComponent' - Angular JSON Schema Form
@@ -77,7 +77,8 @@ export const JSON_SCHEMA_FORM_VALUE_ACCESSOR: any = {
   changeDetection: ChangeDetectionStrategy.OnPush,
   // Adding 'JsonSchemaFormService' here, instead of in the module,
   // creates a separate instance of the service for each component
-  providers:  [ JsonSchemaFormService, JSON_SCHEMA_FORM_VALUE_ACCESSOR ],
+  // providers:  [ JsonSchemaFormService, JSON_SCHEMA_FORM_VALUE_ACCESSOR ],
+  providers:  [ JsonSchemaFormService ],
 })
 export class JsonSchemaFormEditorComponent implements ControlValueAccessor, OnChanges, OnInit {
   debugOutput: any; // Debug information, if requested
@@ -155,8 +156,8 @@ export class JsonSchemaFormEditorComponent implements ControlValueAccessor, OnCh
 
   constructor(
     private changeDetector: ChangeDetectorRef,
-    private frameworkLibrary: FrameworkLibraryService,
-    private widgetLibrary: WidgetLibraryService,
+    private frameworkLibrary: FrameworkEditorLibraryService,
+    private widgetEditorLibrary: WidgetEditorLibraryService,
     public jsf: JsonSchemaFormService,
     private sanitizer: DomSanitizer
   ) { }
@@ -400,7 +401,7 @@ export class JsonSchemaFormEditorComponent implements ControlValueAccessor, OnCh
     this.jsf.framework = this.frameworkLibrary.getFramework();
     if (isObject(this.jsf.formOptions.widgets)) {
       for (const widget of Object.keys(this.jsf.formOptions.widgets)) {
-        this.widgetLibrary.registerWidget(widget, this.jsf.formOptions.widgets[widget]);
+        this.widgetEditorLibrary.registerWidget(widget, this.jsf.formOptions.widgets[widget]);
       }
     }
     if (isObject(this.form) && isObject(this.form.tpldata)) {
@@ -708,7 +709,7 @@ export class JsonSchemaFormEditorComponent implements ControlValueAccessor, OnCh
       // Update all layout elements, add values, widgets, and validators,
       // replace any '*' with a layout built from all schema elements,
       // and update the FormGroup template with any new validators
-      this.jsf.buildLayout(this.widgetLibrary);
+      this.jsf.buildLayout(this.widgetEditorLibrary);
 
       // Build the Angular FormGroup template from the schema
       this.jsf.buildFormGroupTemplate(this.jsf.formValues);

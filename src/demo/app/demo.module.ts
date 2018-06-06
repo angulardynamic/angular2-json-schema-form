@@ -11,7 +11,9 @@ import {
 import { RouterModule } from '@angular/router';
 
 import {
-  JsonSchemaFormModule, NoFrameworkModule, MaterialDesignFrameworkModule,
+  JsonSchemaFormModule,
+  JsonSchemaFormEditorModule,
+  NoFrameworkModule, MaterialDesignFrameworkModule,
   Bootstrap3FrameworkModule, Bootstrap4FrameworkModule
 } from '../../lib';
 
@@ -47,7 +49,13 @@ import { ActivatedRoute, Router } from '@angular/router';
       MaterialDesignFrameworkModule,
       Bootstrap3FrameworkModule,
       Bootstrap4FrameworkModule
-    )
+    ),
+    JsonSchemaFormEditorModule.forRoot(
+        NoFrameworkModule,
+        MaterialDesignFrameworkModule,
+        Bootstrap3FrameworkModule,
+        Bootstrap4FrameworkModule
+      )
   ],
   bootstrap: [ DemoRootComponent ]
 })

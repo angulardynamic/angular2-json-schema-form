@@ -2,11 +2,12 @@ import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { FrameworkLibraryService } from './framework-library/framework-library.service';
-import { WidgetLibraryModule } from './widget-library/widget-library.module';
-import { WidgetLibraryService } from './widget-library/widget-library.service';
+import { FrameworkEditorLibraryService } from './framework-library/framework-editor-library.service';
+import { WidgetEditorLibraryModule } from './widget-editor-library/widget-editor-library.module';
+import { WidgetEditorLibraryService } from './widget-editor-library/widget-editor-library.service';
 
 import { JsonSchemaFormComponent } from './json-schema-form.component';
+import { JsonSchemaFormEditorComponent } from './json-schema-form-editor.component';
 
 import { JsonSchemaFormService } from './json-schema-form.service';
 
@@ -18,20 +19,20 @@ import { NoFrameworkModule } from './framework-library/no-framework/no-framework
 @NgModule({
   imports: [
     CommonModule, FormsModule, ReactiveFormsModule,
-    WidgetLibraryModule, NoFrameworkModule
+    WidgetEditorLibraryModule, NoFrameworkModule
   ],
-  declarations: [ JsonSchemaFormComponent ],
-  exports: [ JsonSchemaFormComponent, WidgetLibraryModule ]
+  declarations: [ JsonSchemaFormEditorComponent ],
+  exports: [ JsonSchemaFormEditorComponent, WidgetEditorLibraryModule ]
 })
-export class JsonSchemaFormModule {
+export class JsonSchemaFormEditorModule {
   static forRoot(...frameworks): ModuleWithProviders {
     const loadFrameworks = frameworks.length ?
       frameworks.map(framework => framework.forRoot().providers[0]) :
       [{ provide: Framework, useClass: NoFramework, multi: true }];
     return {
-      ngModule: JsonSchemaFormModule,
+      ngModule: JsonSchemaFormEditorModule,
       providers: [
-        JsonSchemaFormService, FrameworkLibraryService, WidgetLibraryService,
+        JsonSchemaFormService, FrameworkEditorLibraryService, WidgetEditorLibraryService, WidgetEditorLibraryModule,
         ...loadFrameworks
       ]
     };

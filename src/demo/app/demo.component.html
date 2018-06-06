@@ -148,7 +148,7 @@
       <div *ngIf="!formActive">{{jsonFormStatusMessage}}</div>
 
       <!-- This is the form! -->
-      <json-schema-form
+      <!-- <json-schema-form
         *ngIf="formActive"
         loadExternalAssets="true"
         [form]="jsonFormObject"
@@ -159,11 +159,10 @@
         (onSubmit)="onSubmit($event)"
         (isValid)="isValid($event)"
         (validationErrors)="validationErrors($event)">
-      </json-schema-form>
+      </json-schema-form> -->
 
-
-       <!-- This is selector will use when drag and drop add ! -->
-      <!-- <json-schema-form-editor
+        <!-- This is selector will use when drag and drop add ! -->
+      <json-schema-form-editor
       *ngIf="formActive"
       loadExternalAssets="true"
       [form]="jsonFormObject"
@@ -174,7 +173,7 @@
       (onSubmit)="onSubmit($event)"
       (isValid)="isValid($event)"
       (validationErrors)="validationErrors($event)">
-    </json-schema-form-editor> -->
+    </json-schema-form-editor>
     </div>
     <hr>
     <h4 class="default-cursor" (click)="toggleVisible('output')">

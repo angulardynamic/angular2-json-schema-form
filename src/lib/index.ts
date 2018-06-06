@@ -34,9 +34,12 @@ export { JsonSchemaFormComponent } from './src/json-schema-form.component';
 export { JsonSchemaFormEditorComponent } from './src/json-schema-form-editor.component';
 export { JsonSchemaFormService } from './src/json-schema-form.service';
 export { JsonSchemaFormModule } from './src/json-schema-form.module';
+export { JsonSchemaFormEditorModule } from './src/json-schema-form-editor.module';
 
 export { WidgetLibraryService } from './src/widget-library/widget-library.service';
+export { WidgetEditorLibraryService } from './src/widget-editor-library/widget-editor-library.service';
 export { WidgetLibraryModule } from './src/widget-library/widget-library.module';
+export { WidgetEditorLibraryModule } from './src/widget-editor-library/widget-editor-library.module';
 
 export { AddReferenceComponent } from './src/widget-library/add-reference.component';
 export { OneOfComponent } from './src/widget-library/one-of.component';
@@ -62,6 +65,7 @@ export { TemplateComponent } from './src/widget-library/template.component';
 export { TextareaComponent } from './src/widget-library/textarea.component';
 
 export { FrameworkLibraryService } from './src/framework-library/framework-library.service';
+export { FrameworkEditorLibraryService } from './src/framework-library/framework-editor-library.service';
 // export { FrameworkLibraryModule } from './src/framework-library/framework-library.module';
 
 export { Framework } from './src/framework-library/framework';
