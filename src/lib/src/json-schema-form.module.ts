@@ -7,6 +7,7 @@ import { WidgetLibraryModule } from './widget-library/widget-library.module';
 import { WidgetLibraryService } from './widget-library/widget-library.service';
 
 import { JsonSchemaFormComponent } from './json-schema-form.component';
+import { JsonSchemaFormEditorComponent } from './json-schema-form-editor.component';
 
 import { JsonSchemaFormService } from './json-schema-form.service';
 
@@ -20,8 +21,8 @@ import { NoFrameworkModule } from './framework-library/no-framework/no-framework
     CommonModule, FormsModule, ReactiveFormsModule,
     WidgetLibraryModule, NoFrameworkModule
   ],
-  declarations: [ JsonSchemaFormComponent ],
-  exports: [ JsonSchemaFormComponent, WidgetLibraryModule ]
+  declarations: [ JsonSchemaFormComponent, JsonSchemaFormEditorComponent ],
+  exports: [ JsonSchemaFormComponent, JsonSchemaFormEditorComponent, WidgetLibraryModule ]
 })
 export class JsonSchemaFormModule {
   static forRoot(...frameworks): ModuleWithProviders {
