@@ -1,0 +1,118 @@
+:host {
+    min-height: 40px;
+    padding: 5px;
+    border: 1px solid skyblue;
+    margin: 0;
+    z-index: 100;
+
+    position: relative;
+}
+
+:host[hover="true"]::after {
+    display: block;
+    position: absolute;
+
+    top: 0;
+    left: 0;
+    z-index: 99;
+
+    content: "";
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 255, 255, 0.1) !important;
+}
+
+.hover-borders {
+    background-color: transparent;
+    position: absolute;
+    border: 1px dashed aqua;
+    z-index: 98;
+}
+
+.hover-borders.vertical {
+    top: -5000px;
+    height: 10000px;
+}
+
+.hover-borders.vertical.right {
+    right: 0;
+}
+
+.hover-borders.vertical.left {
+    left: 0;
+}
+
+.hover-borders.horizontal {
+    left: -5000px;
+    width: 10000px;
+}
+
+.hover-borders.horizontal.bottom {
+    bottom: 0;
+}
+
+.hover-borders.horizontal.top {
+    top: 0;
+}    
+
+:host:hover::before {
+    display: block;
+}
+
+:host:hover > .action-remove {
+    display: block;
+}
+
+:host:hover > .action-remove ~ .action-remove {
+      /* display: none; */
+      display: block;
+}
+
+:host .action-remove {
+     /* display: none; */
+    display: block;
+    z-index: 100;
+    cursor: pointer;
+    height: 22px;
+    padding: 0 0 0 5px;
+    min-width: 100px;
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    background-color: skyblue;
+    border-radius: 0 0 5px 5px;
+}
+
+:host .action-remove .fa {
+    padding: 3px;
+}
+
+:host::before {
+    /* display: none; */
+    display: block;
+    background-color: skyblue;
+    color: #000;
+
+    height: 20px;
+    border-radius: 0 0 0 5px;
+    position: absolute;
+    right: 0;
+    text-align: center;
+    z-index: 100;
+}
+
+:host.dnd-drag-enter,
+:host.dnd-drag-over {
+    border: 1px solid skyblue;
+    margin: -1px;
+}
+
+:host.dnd-drag-over::after {
+    content: '';
+    background-color: skyblue;
+    border: 1px solid skyblue;
+    display: block;
+
+    height: 2px;
+}

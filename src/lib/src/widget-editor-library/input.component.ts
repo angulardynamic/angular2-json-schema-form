@@ -1,12 +1,18 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ElementRef, ComponentFactoryResolver, Injector,
+    ChangeDetectorRef, HostBinding, ViewContainerRef, ViewChild, Directive
+} from '@angular/core';
 import { AbstractControl } from '@angular/forms';
+import { Droppable } from './abstract/droppable';
+import { DragDropService, DragDropConfig } from 'ng2-dnd';
+import { Register, Registerable } from './decorators/register.decorator';
 
 import { JsonSchemaFormService } from '../json-schema-form.service';
 
 @Component({
   selector: 'input-widget',
   template: `
-    <div [class]="options?.htmlClass || ''">
+    <div dnd-draggable [dragEnabled]="true" [dragData]="_dragData" (onDragSuccess)="onDragItem($event)"
+     [class]="options?.htmlClass || ''">
       <label *ngIf="options?.title"
         [attr.for]="'control' + layoutNode?._id"
         [class]="options?.labelHtmlClass || ''"
@@ -47,8 +53,11 @@ import { JsonSchemaFormService } from '../json-schema-form.service';
           <option *ngFor="let word of options?.typeahead?.source" [value]="word">
         </datalist>
     </div>`,
+    host: {
+        '(onDropSuccess)': 'onDropItem($event)'
+    }
 })
-export class InputComponent implements OnInit {
+export class InputComponent extends Droppable implements OnInit {
   formControl: AbstractControl;
   controlName: string;
   controlValue: string;
@@ -61,12 +70,42 @@ export class InputComponent implements OnInit {
   @Input() dataIndex: number[];
 
   constructor(
-    private jsf: JsonSchemaFormService
-  ) { }
+    private jsf: JsonSchemaFormService,
+    protected element: ElementRef,
+    protected componentFactory: ComponentFactoryResolver,
+    protected viewContainerRef: ViewContainerRef,
+    protected changeDetector: ChangeDetectorRef,
+    protected service: DragDropService,
+    protected config: DragDropConfig
+  ) {
+    super(element, componentFactory, viewContainerRef, changeDetector, service, config);
+
+    super.setSchema({
+        type: 'object',
+        properties: {
+            custom_class: {
+                type: 'string'
+            },
+            center_align: {
+                type: 'boolean'
+            }
+        }
+    });
+
+    // this.acceptableItems.push('Column');
+    this._dragData.label = 'Input';
+    this._dragData.elementName = 'Input';
+    this._dragData.element = InputComponent;
+  }
 
   ngOnInit() {
     this.options = this.layoutNode.options || {};
     this.jsf.initializeControl(this);
+  }
+
+  protected getId() {
+    // return '_' + Math.random().toString(36).substr(2, 9);
+    return 'control' + this.layoutNode.id;
   }
 
   updateValue(event) {
