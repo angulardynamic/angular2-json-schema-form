@@ -29,6 +29,7 @@ export {
 } from './src/shared/layout.functions';
 export { dateToString, stringToDate, findDate } from './src/shared/date.functions';
 export { OrderableDirective } from './src/shared/orderable.directive';
+export { SharedModule } from './src/shared/shared.module';
 
 export { JsonSchemaFormComponent } from './src/json-schema-form.component';
 export { JsonSchemaFormEditorComponent } from './src/json-schema-form-editor.component';
@@ -37,6 +38,9 @@ export { JsonSchemaFormModule } from './src/json-schema-form.module';
 
 export { WidgetLibraryService } from './src/widget-library/widget-library.service';
 export { WidgetLibraryModule } from './src/widget-library/widget-library.module';
+
+export { WidgetEditorLibraryModule } from './src/widget-editor-library/widget-editor-library.module';
+export { WidgetEditorLibraryService } from './src/widget-editor-library/widget-editor-library.service';
 
 export { AddReferenceComponent } from './src/widget-library/add-reference.component';
 export { OneOfComponent } from './src/widget-library/one-of.component';
@@ -60,6 +64,33 @@ export { TabComponent } from './src/widget-library/tab.component';
 export { TabsComponent } from './src/widget-library/tabs.component';
 export { TemplateComponent } from './src/widget-library/template.component';
 export { TextareaComponent } from './src/widget-library/textarea.component';
+
+
+// widget-editor-library coponents//
+export {AddReferenceEditorComponent} from './src/widget-editor-library/add-reference-editor.component';
+export { ButtonEditorComponent } from './src/widget-editor-library/button-editor.component';
+export { OneOfEditorComponent } from './src/widget-editor-library/one-of-editor.component';
+export { CheckboxEditorComponent } from './src/widget-editor-library/checkbox-editor.component';
+export { CheckboxesEditorComponent } from './src/widget-editor-library/checkboxes-editor.component';
+export { FileEditorComponent } from './src/widget-editor-library/file-editor.component';
+export { HiddenEditorComponent } from './src/widget-editor-library/hidden-editor.component';
+export { InputEditorComponent } from './src/widget-editor-library/input-editor.component';
+export { MessageEditorComponent } from './src/widget-editor-library/message-editor.component';
+export { NoneEditorComponent } from './src/widget-editor-library/none-editor.component';
+export { NumberEditorComponent } from './src/widget-editor-library/number-editor.component';
+export { RadiosEditorComponent } from './src/widget-editor-library/radios-editor.component';
+export { RootEditorComponent } from './src/widget-editor-library/root-editor.component';
+export { SectionEditorComponent } from './src/widget-editor-library/section-editor.component';
+export { SelectEditorComponent } from './src/widget-editor-library/select-editor.component';
+export { SelectFrameworkEditorComponent } from './src/widget-editor-library/select-framework-editor.component';
+export { SelectWidgetEditorComponent } from './src/widget-editor-library/select-widget-editor.component';
+export { SubmitEditorComponent } from './src/widget-editor-library/submit-editor.component';
+export { TabEditorComponent } from './src/widget-editor-library/tab-editor.component';
+export { TabsEditorComponent } from './src/widget-editor-library/tabs-editor.component';
+export { TemplateEditorComponent } from './src/widget-editor-library/template-editor.component';
+export { TextareaEditorComponent } from './src/widget-editor-library/textarea-editor.component';
+
+
 
 export { FrameworkLibraryService } from './src/framework-library/framework-library.service';
 // export { FrameworkLibraryModule } from './src/framework-library/framework-library.module';

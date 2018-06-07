@@ -69,7 +69,7 @@ export const JSON_SCHEMA_FORM_VALUE_ACCESSOR: any = {
       <script type="text/javascript" [src]="script"></script>
     </div>
     <form class="json-schema-form" (ngSubmit)="submitForm()">
-      <root-widget [layout]="jsf?.layout"></root-widget>
+      <root-widget-editor [layout]="jsf?.layout"></root-widget-editor>
     </form>
     <div *ngIf="debug || jsf?.formOptions?.debug">
       Debug output: <pre>{{debugOutput}}</pre>

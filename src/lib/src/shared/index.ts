@@ -42,3 +42,5 @@ export {
 export { dateToString, stringToDate, findDate } from './date.functions';
 
 export { OrderableDirective } from './orderable.directive';
+
+export { SharedModule } from './shared.module';

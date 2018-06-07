@@ -15,10 +15,10 @@ import { BASIC_WIDGETS } from './index';
   entryComponents: [ ...BASIC_WIDGETS ],
   providers:       [ JsonSchemaFormService ]
 })
-export class WidgetLibraryModule {
+export class WidgetEditorLibraryModule {
   static forRoot(): ModuleWithProviders {
     return {
-      ngModule: WidgetLibraryModule,
+      ngModule: WidgetEditorLibraryModule,
       providers: [ JsonSchemaFormService ]
     };
   }
