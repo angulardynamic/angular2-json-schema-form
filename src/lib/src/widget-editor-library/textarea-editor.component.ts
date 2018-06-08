@@ -41,7 +41,7 @@ import { JsonSchemaFormService } from '../json-schema-form.service';
         (input)="updateValue($event)">{{controlValue}}</textarea>
     </div>`,
 })
-export class TextareaComponent implements OnInit {
+export class TextareaEditorComponent implements OnInit {
   formControl: AbstractControl;
   controlName: string;
   controlValue: any;

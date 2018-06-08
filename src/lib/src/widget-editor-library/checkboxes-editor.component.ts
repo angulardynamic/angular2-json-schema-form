@@ -56,7 +56,7 @@ import { buildTitleMap } from '../shared';
       </div>
     </div>`,
 })
-export class CheckboxesComponent implements OnInit {
+export class CheckboxesEditorComponent implements OnInit {
   formControl: AbstractControl;
   controlName: string;
   controlValue: any;

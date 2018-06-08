@@ -2,28 +2,28 @@ import { Injectable } from '@angular/core';
 
 import { hasOwn } from '../shared/utility.functions';
 
-import { AddReferenceComponent } from './add-reference.component';
-import { OneOfComponent } from './one-of.component';
-import { ButtonComponent } from './button.component';
-import { CheckboxComponent } from './checkbox.component';
-import { CheckboxesComponent } from './checkboxes.component';
-import { FileComponent } from './file.component';
-import { HiddenComponent } from './hidden.component';
-import { InputComponent } from './input.component';
-import { MessageComponent } from './message.component';
-import { NoneComponent } from './none.component';
-import { NumberComponent } from './number.component';
-import { RadiosComponent } from './radios.component';
-import { RootComponent } from './root.component';
-import { SectionComponent } from './section.component';
-import { SelectComponent } from './select.component';
-import { SelectFrameworkComponent } from './select-framework.component';
-import { SelectWidgetComponent } from './select-widget.component';
-import { SubmitComponent } from './submit.component';
-import { TabComponent } from './tab.component';
-import { TabsComponent } from './tabs.component';
-import { TemplateComponent } from './template.component';
-import { TextareaComponent } from './textarea.component';
+import { AddReferenceEditorComponent } from './add-reference-editor.component';
+import { OneOfEditorComponent } from './one-of-editor.component';
+import { ButtonEditorComponent } from './button-editor.component';
+import { CheckboxEditorComponent } from './checkbox-editor.component';
+import { CheckboxesEditorComponent } from './checkboxes-editor.component';
+import { FileEditorComponent } from './file-editor.component';
+import { HiddenEditorComponent } from './hidden-editor.component';
+import { InputEditorComponent } from './input-editor.component';
+import { MessageEditorComponent } from './message-editor.component';
+import { NoneEditorComponent } from './none-editor.component';
+import { NumberEditorComponent } from './number-editor.component';
+import { RadiosEditorComponent } from './radios-editor.component';
+import { RootEditorComponent } from './root-editor.component';
+import { SectionEditorComponent } from './section-editor.component';
+import { SelectEditorComponent } from './select-editor.component';
+import { SelectFrameworkEditorComponent } from './select-framework-editor.component';
+import { SelectWidgetEditorComponent } from './select-widget-editor.component';
+import { SubmitEditorComponent } from './submit-editor.component';
+import { TabEditorComponent } from './tab-editor.component';
+import { TabsEditorComponent } from './tabs-editor.component';
+import { TemplateEditorComponent } from './template-editor.component';
+import { TextareaEditorComponent } from './textarea-editor.component';
 
 @Injectable()
 export class WidgetEditorLibraryService {
@@ -32,20 +32,20 @@ export class WidgetEditorLibraryService {
   widgetLibrary: any = {
 
   // Angular JSON Schema Form administrative widgets
-    'none': NoneComponent, // Placeholder, for development - displays nothing
-    'root': RootComponent, // Form root, renders a complete layout
-    'select-framework': SelectFrameworkComponent, // Applies the selected framework to a specified widget
-    'select-widget': SelectWidgetComponent, // Displays a specified widget
-    '$ref': AddReferenceComponent, // Button to add a new array item or $ref element
+    'none': NoneEditorComponent, // Placeholder, for development - displays nothing
+    'root': RootEditorComponent, // Form root, renders a complete layout
+    'select-framework': SelectFrameworkEditorComponent, // Applies the selected framework to a specified widget
+    'select-widget': SelectWidgetEditorComponent, // Displays a specified widget
+    '$ref': AddReferenceEditorComponent, // Button to add a new array item or $ref element
 
   // Free-form text HTML 'input' form control widgets <input type="...">
     'email': 'text',
     'integer': 'number', // Note: 'integer' is not a recognized HTML input type
-    'number': NumberComponent,
+    'number': NumberEditorComponent,
     'password': 'text',
     'search': 'text',
     'tel': 'text',
-    'text': InputComponent,
+    'text': InputEditorComponent,
     'url': 'text',
 
   // Controlled text HTML 'input' form control widgets <input type="...">
@@ -60,49 +60,49 @@ export class WidgetEditorLibraryService {
 
   // Non-text HTML 'input' form control widgets <input type="...">
     // 'button': <input type="button"> not used, use <button> instead
-    'checkbox': CheckboxComponent, // TODO: Set ternary = true for 3-state ??
-    'file': FileComponent, // TODO: Finish 'file' widget
+    'checkbox': CheckboxEditorComponent, // TODO: Set ternary = true for 3-state ??
+    'file': FileEditorComponent, // TODO: Finish 'file' widget
     'hidden': 'text',
     'image': 'text', // TODO: Figure out how to handle these
     'radio': 'radios',
     'reset': 'submit', // TODO: Figure out how to handle these
-    'submit': SubmitComponent,
+    'submit': SubmitEditorComponent,
 
   // Other (non-'input') HTML form control widgets
-    'button': ButtonComponent,
-    'select': SelectComponent,
+    'button': ButtonEditorComponent,
+    'select': SelectEditorComponent,
     // 'option': automatically generated by select widgets
     // 'optgroup': automatically generated by select widgets
-    'textarea': TextareaComponent,
+    'textarea': TextareaEditorComponent,
 
   // HTML form control widget sets
-    'checkboxes': CheckboxesComponent, // Grouped list of checkboxes
+    'checkboxes': CheckboxesEditorComponent, // Grouped list of checkboxes
     'checkboxes-inline': 'checkboxes', // Checkboxes in one line
     'checkboxbuttons': 'checkboxes', // Checkboxes as html buttons
-    'radios': RadiosComponent, // Grouped list of radio buttons
+    'radios': RadiosEditorComponent, // Grouped list of radio buttons
     'radios-inline': 'radios', // Radio controls in one line
     'radiobuttons': 'radios', // Radio controls as html buttons
 
   // HTML Layout widgets
     // 'label': automatically added to data widgets
     // 'legend': automatically added to fieldsets
-    'section': SectionComponent, // Just a div <div>
+    'section': SectionEditorComponent, // Just a div <div>
     'div': 'section', // Still just a div <div>
     'fieldset': 'section', // A fieldset, with an optional legend <fieldset>
     'flex': 'section', // A flexbox container <div style="display: flex">
 
   // Non-HTML layout widgets
-    'one-of': OneOfComponent, // A select box that changes another input
+    'one-of': OneOfEditorComponent, // A select box that changes another input
                               // TODO: Finish 'one-of' widget
     'array': 'section', // A list you can add, remove and reorder <fieldset>
     'tabarray': 'tabs', // A tabbed version of array
     'tab': 'section', // A tab group, similar to a fieldset or section <fieldset>
-    'tabs': TabsComponent, // A tabbed set of panels with different controls
-    'message': MessageComponent, // Insert arbitrary html
+    'tabs': TabsEditorComponent, // A tabbed set of panels with different controls
+    'message': MessageEditorComponent, // Insert arbitrary html
     'help': 'message', // Insert arbitrary html
     'msg': 'message', // Insert arbitrary html
     'html': 'message', // Insert arbitrary html
-    'template': TemplateComponent, // Insert a custom Angular component
+    'template': TemplateEditorComponent, // Insert a custom Angular component
 
   // Widgets included for compatibility with JSON Form API
     'advancedfieldset': 'section', // Adds 'Advanced settings' title <fieldset>

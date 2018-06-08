@@ -15,7 +15,7 @@ import { JsonSchemaFormService } from '../json-schema-form.service';
     </button>`,
     changeDetection: ChangeDetectionStrategy.Default,
 })
-export class AddReferenceComponent implements OnInit {
+export class AddReferenceEditorComponent implements OnInit {
   options: any;
   itemCount: number;
   previousLayoutIndex: number[];

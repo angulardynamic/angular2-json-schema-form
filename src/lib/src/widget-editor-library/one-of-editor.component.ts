@@ -9,7 +9,7 @@ import { JsonSchemaFormService } from '../json-schema-form.service';
   selector: 'one-of-widget',
   template: ``,
 })
-export class OneOfComponent implements OnInit {
+export class OneOfEditorComponent implements OnInit {
   formControl: AbstractControl;
   controlName: string;
   controlValue: any;

@@ -47,7 +47,7 @@ import { hasValue, JsonPointer } from '../shared';
     }
   `],
 })
-export class RootComponent {
+export class RootEditorComponent {
   options: any;
   @Input() dataIndex: number[];
   @Input() layoutIndex: number[];

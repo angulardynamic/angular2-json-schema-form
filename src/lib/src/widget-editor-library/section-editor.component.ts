@@ -73,7 +73,7 @@ import { JsonSchemaFormService } from '../json-schema-form.service';
     .expanded > legend:before, .expanded > label:before  { content: '▼'; padding-right: .2em; }
   `],
 })
-export class SectionComponent implements OnInit {
+export class SectionEditorComponent implements OnInit {
   options: any;
   expanded = true;
   containerType: string;

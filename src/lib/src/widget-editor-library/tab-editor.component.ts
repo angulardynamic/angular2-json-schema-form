@@ -12,7 +12,7 @@ import { JsonSchemaFormService } from '../json-schema-form.service';
         [layout]="layoutNode.items"></root-widget>
     </div>`,
 })
-export class TabComponent implements OnInit {
+export class TabEditorComponent implements OnInit {
   options: any;
   @Input() layoutNode: any;
   @Input() layoutIndex: number[];

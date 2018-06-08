@@ -6,10 +6,10 @@ import {
 import { JsonSchemaFormService } from '../json-schema-form.service';
 
 @Component({
-  selector: 'select-framework-widget',
+  selector: 'template-widget',
   template: `<div #widgetContainer></div>`,
 })
-export class SelectFrameworkComponent implements OnChanges, OnInit {
+export class TemplateEditorComponent implements OnInit, OnChanges {
   newComponent: ComponentRef<any> = null;
   @Input() layoutNode: any;
   @Input() layoutIndex: number[];
@@ -31,9 +31,9 @@ export class SelectFrameworkComponent implements OnChanges, OnInit {
   }
 
   updateComponent() {
-    if (!this.newComponent && this.jsf.framework) {
+    if (!this.newComponent && this.layoutNode.options.template) {
       this.newComponent = this.widgetContainer.createComponent(
-        this.componentFactory.resolveComponentFactory(this.jsf.framework)
+        this.componentFactory.resolveComponentFactory(this.layoutNode.options.template)
       );
     }
     if (this.newComponent) {
