@@ -65,7 +65,7 @@
   "peerDependencies": {
     "@angular/common": "^6.0.0",
     "@angular/flex-layout": "6.0.0-beta.15",
-    "ng2-dnd": "github:angulardynamic/DragNDrop"
+    "ng2-dnd": "^4.1.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.7.0-beta.1",
@@ -84,7 +84,7 @@
     "@angular/platform-browser": "6.0.3",
     "@angular/platform-browser-dynamic": "6.0.3",
     "@angular/router": "6.0.3",
-    "ng2-dnd": "github:angulardynamic/DragNDrop",
+    "ng2-dnd": "^4.1.0",
     "@types/ace": "0.0.37",
     "@types/jasmine": "^2.8.8",
     "@types/jasminewd2": "~2.0.3",

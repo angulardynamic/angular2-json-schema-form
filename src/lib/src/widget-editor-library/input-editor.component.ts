@@ -11,7 +11,7 @@ import { JsonSchemaFormService } from '../json-schema-form.service';
 @Component({
   selector: 'input-widget',
   template: `
-    <div dnd-draggable [dragEnabled]="true" [dragData]="_dragData" (onDragSuccess)="onDragItem($event)"
+    <div
      [class]="options?.htmlClass || ''">
       <label *ngIf="options?.title"
         [attr.for]="'control' + layoutNode?._id"
