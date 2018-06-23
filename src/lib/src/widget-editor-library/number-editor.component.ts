@@ -47,7 +47,7 @@ import { JsonSchemaFormService } from '../json-schema-form.service';
       <span *ngIf="layoutNode?.type === 'range'" [innerHTML]="controlValue"></span>
     </div>`,
 })
-export class NumberComponent implements OnInit {
+export class NumberEditorComponent implements OnInit {
   formControl: AbstractControl;
   controlName: string;
   controlValue: any;

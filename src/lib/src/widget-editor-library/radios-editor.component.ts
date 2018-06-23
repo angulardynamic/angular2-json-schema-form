@@ -63,7 +63,7 @@ import { buildTitleMap } from '../shared';
       </div>
     </div>`,
 })
-export class RadiosComponent implements OnInit {
+export class RadiosEditorComponent implements OnInit {
   formControl: AbstractControl;
   controlName: string;
   controlValue: any;

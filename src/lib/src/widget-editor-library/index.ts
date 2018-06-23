@@ -1,54 +1,54 @@
-import { AddReferenceComponent } from './add-reference.component';
-import { OneOfComponent } from './one-of.component';
-import { ButtonComponent } from './button.component';
-import { CheckboxComponent } from './checkbox.component';
-import { CheckboxesComponent } from './checkboxes.component';
-import { FileComponent } from './file.component';
-import { HiddenComponent } from './hidden.component';
-import { InputComponent } from './input.component';
-import { MessageComponent } from './message.component';
-import { NoneComponent } from './none.component';
-import { NumberComponent } from './number.component';
-import { RadiosComponent } from './radios.component';
-import { RootComponent } from './root.component';
-import { SectionComponent } from './section.component';
-import { SelectComponent } from './select.component';
-import { SelectFrameworkComponent } from './select-framework.component';
-import { SelectWidgetComponent } from './select-widget.component';
-import { SubmitComponent } from './submit.component';
-import { TabComponent } from './tab.component';
-import { TabsComponent } from './tabs.component';
-import { TemplateComponent } from './template.component';
-import { TextareaComponent } from './textarea.component';
+import { AddReferenceEditorComponent } from './add-reference-editor.component';
+import { OneOfEditorComponent } from './one-of-editor.component';
+import { ButtonEditorComponent } from './button-editor.component';
+import { CheckboxEditorComponent } from './checkbox-editor.component';
+import { CheckboxesEditorComponent } from './checkboxes-editor.component';
+import { FileEditorComponent } from './file-editor.component';
+import { HiddenEditorComponent } from './hidden-editor.component';
+import { InputEditorComponent } from './input-editor.component';
+import { MessageEditorComponent } from './message-editor.component';
+import { NoneEditorComponent } from './none-editor.component';
+import { NumberEditorComponent } from './number-editor.component';
+import { RadiosEditorComponent } from './radios-editor.component';
+import { RootEditorComponent } from './root-editor.component';
+import { SectionEditorComponent } from './section-editor.component';
+import { SelectEditorComponent } from './select-editor.component';
+import { SelectFrameworkEditorComponent } from './select-framework-editor.component';
+import { SelectWidgetEditorComponent } from './select-widget-editor.component';
+import { SubmitEditorComponent } from './submit-editor.component';
+import { TabEditorComponent } from './tab-editor.component';
+import { TabsEditorComponent } from './tabs-editor.component';
+import { TemplateEditorComponent } from './template-editor.component';
+import { TextareaEditorComponent } from './textarea-editor.component';
 
 export const BASIC_WIDGETS = [
-  AddReferenceComponent, OneOfComponent, ButtonComponent, CheckboxComponent,
-  CheckboxesComponent, FileComponent, HiddenComponent, InputComponent,
-  MessageComponent, NoneComponent, NumberComponent, RadiosComponent,
-  RootComponent, SectionComponent, SelectComponent, SelectFrameworkComponent,
-  SelectWidgetComponent, SubmitComponent, TabComponent, TabsComponent,
-  TemplateComponent, TextareaComponent
+  AddReferenceEditorComponent, OneOfEditorComponent, ButtonEditorComponent, CheckboxEditorComponent,
+  CheckboxesEditorComponent, FileEditorComponent, HiddenEditorComponent, InputEditorComponent,
+  MessageEditorComponent, NoneEditorComponent, NumberEditorComponent, RadiosEditorComponent,
+  RootEditorComponent, SectionEditorComponent, SelectEditorComponent, SelectFrameworkEditorComponent,
+  SelectWidgetEditorComponent, SubmitEditorComponent, TabEditorComponent, TabsEditorComponent,
+  TemplateEditorComponent, TextareaEditorComponent
 ];
 
-export { AddReferenceComponent } from './add-reference.component';
-export { OneOfComponent } from './one-of.component';
-export { ButtonComponent } from './button.component';
-export { CheckboxComponent } from './checkbox.component';
-export { CheckboxesComponent } from './checkboxes.component';
-export { FileComponent } from './file.component';
-export { HiddenComponent } from './hidden.component';
-export { InputComponent } from './input.component';
-export { MessageComponent } from './message.component';
-export { NoneComponent } from './none.component';
-export { NumberComponent } from './number.component';
-export { RadiosComponent } from './radios.component';
-export { RootComponent } from './root.component';
-export { SectionComponent } from './section.component';
-export { SelectComponent } from './select.component';
-export { SelectFrameworkComponent } from './select-framework.component';
-export { SelectWidgetComponent } from './select-widget.component';
-export { SubmitComponent } from './submit.component';
-export { TabComponent } from './tab.component';
-export { TabsComponent } from './tabs.component';
-export { TemplateComponent } from './template.component';
-export { TextareaComponent } from './textarea.component';
+export { AddReferenceEditorComponent } from './add-reference-editor.component';
+export { OneOfEditorComponent } from './one-of-editor.component';
+export { ButtonEditorComponent } from './button-editor.component';
+export { CheckboxEditorComponent } from './checkbox-editor.component';
+export { CheckboxesEditorComponent } from './checkboxes-editor.component';
+export { FileEditorComponent } from './file-editor.component';
+export { HiddenEditorComponent } from './hidden-editor.component';
+export { InputEditorComponent } from './input-editor.component';
+export { MessageEditorComponent } from './message-editor.component';
+export { NoneEditorComponent } from './none-editor.component';
+export { NumberEditorComponent } from './number-editor.component';
+export { RadiosEditorComponent } from './radios-editor.component';
+export { RootEditorComponent } from './root-editor.component';
+export { SectionEditorComponent } from './section-editor.component';
+export { SelectEditorComponent } from './select-editor.component';
+export { SelectFrameworkEditorComponent } from './select-framework-editor.component';
+export { SelectWidgetEditorComponent } from './select-widget-editor.component';
+export { SubmitEditorComponent } from './submit-editor.component';
+export { TabEditorComponent } from './tab-editor.component';
+export { TabsEditorComponent } from './tabs-editor.component';
+export { TemplateEditorComponent } from './template-editor.component';
+export { TextareaEditorComponent } from './textarea-editor.component';

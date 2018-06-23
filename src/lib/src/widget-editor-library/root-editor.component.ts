@@ -6,14 +6,16 @@ import { hasValue, JsonPointer } from '../shared';
 @Component({
   selector: 'root-widget',
   template: `
-    <div *ngFor="let layoutItem of layout; let i = index"
+  <div dnd-sortable-container [sortableData]="layout">
+    <div *ngFor="let layoutItem of layout; let i = index" 
       [class.form-flex-item]="isFlexItem"
       [style.align-self]="(layoutItem.options || {})['align-self']"
       [style.flex-basis]="getFlexAttribute(layoutItem, 'flex-basis')"
       [style.flex-grow]="getFlexAttribute(layoutItem, 'flex-grow')"
       [style.flex-shrink]="getFlexAttribute(layoutItem, 'flex-shrink')"
       [style.order]="(layoutItem.options || {}).order">
-      <div
+      <div dnd-sortable [sortableIndex]="i" [dragEnabled]="true"
+      [dragData]="layoutItem"
         [dataIndex]="layoutItem?.arrayItem ? (dataIndex || []).concat(i) : (dataIndex || [])"
         [layoutIndex]="(layoutIndex || []).concat(i)"
         [layoutNode]="layoutItem"
@@ -23,7 +25,7 @@ import { hasValue, JsonPointer } from '../shared';
           [layoutIndex]="(layoutIndex || []).concat(i)"
           [layoutNode]="layoutItem"></select-framework-widget>
       </div>
-    </div>`,
+    </div> </div>`,
   styles: [`
     [draggable=true] {
       transition: all 150ms cubic-bezier(.4, 0, .2, 1);
@@ -47,7 +49,7 @@ import { hasValue, JsonPointer } from '../shared';
     }
   `],
 })
-export class RootComponent {
+export class RootEditorComponent {
   options: any;
   @Input() dataIndex: number[];
   @Input() layoutIndex: number[];

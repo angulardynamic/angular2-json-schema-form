@@ -64,6 +64,34 @@ export { TabsComponent } from './src/widget-library/tabs.component';
 export { TemplateComponent } from './src/widget-library/template.component';
 export { TextareaComponent } from './src/widget-library/textarea.component';
 
+
+
+ // widget-editor-library components
+import { AddReferenceEditorComponent } from './src/widget-editor-library/add-reference-editor.component';
+import { OneOfEditorComponent } from './src/widget-editor-library/one-of-editor.component';
+import { ButtonEditorComponent } from './src/widget-editor-library/button-editor.component';
+import { CheckboxEditorComponent } from './src/widget-editor-library/checkbox-editor.component';
+import { CheckboxesEditorComponent } from './src/widget-editor-library/checkboxes-editor.component';
+import { FileEditorComponent } from './src/widget-editor-library/file-editor.component';
+import { HiddenEditorComponent } from './src/widget-editor-library/hidden-editor.component';
+import { InputEditorComponent } from './src/widget-editor-library/input-editor.component';
+import { MessageEditorComponent } from './src/widget-editor-library/message-editor.component';
+import { NoneEditorComponent } from './src/widget-editor-library/none-editor.component';
+import { NumberEditorComponent } from './src/widget-editor-library/number-editor.component';
+import { RadiosEditorComponent } from './src/widget-editor-library/radios-editor.component';
+import { RootEditorComponent } from './src/widget-editor-library/root-editor.component';
+import { SectionEditorComponent } from './src/widget-editor-library/section-editor.component';
+import { SelectEditorComponent } from './src/widget-editor-library/select-editor.component';
+import { SelectFrameworkEditorComponent } from './src/widget-editor-library/select-framework-editor.component';
+import { SelectWidgetEditorComponent } from './src/widget-editor-library/select-widget-editor.component';
+import { SubmitEditorComponent } from './src/widget-editor-library/submit-editor.component';
+import { TabEditorComponent } from './src/widget-editor-library/tab-editor.component';
+import { TabsEditorComponent } from './src/widget-editor-library/tabs-editor.component';
+import { TemplateEditorComponent } from './src/widget-editor-library/template-editor.component';
+import { TextareaEditorComponent } from './src/widget-editor-library/textarea-editor.component';
+
+
+
 export { FrameworkLibraryService } from './src/framework-library/framework-library.service';
 export { FrameworkEditorLibraryService } from './src/framework-library/framework-editor-library.service';
 // export { FrameworkLibraryModule } from './src/framework-library/framework-library.module';

@@ -1,6 +1,6 @@
 // * { border: 1px solid red !important; }
 @import '~@angular/material/theming';
-@import '~ng2-dnd/dist/bundles/style.css';
+// @import '~ng2-dnd/dist/bundles/style.css';
 @include mat-core();
 $demo-app-primary: mat-palette($mat-blue);
 $demo-app-accent:  mat-palette($mat-amber, A200, A100, A400);

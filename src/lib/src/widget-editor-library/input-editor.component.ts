@@ -11,7 +11,7 @@ import { JsonSchemaFormService } from '../json-schema-form.service';
 @Component({
   selector: 'input-widget',
   template: `
-    <div dnd-draggable [dragEnabled]="true" [dragData]="_dragData" (onDragSuccess)="onDragItem($event)"
+    <div
      [class]="options?.htmlClass || ''">
       <label *ngIf="options?.title"
         [attr.for]="'control' + layoutNode?._id"
@@ -57,7 +57,7 @@ import { JsonSchemaFormService } from '../json-schema-form.service';
         '(onDropSuccess)': 'onDropItem($event)'
     }
 })
-export class InputComponent extends Droppable implements OnInit {
+export class InputEditorComponent extends Droppable implements OnInit {
   formControl: AbstractControl;
   controlName: string;
   controlValue: string;
@@ -95,7 +95,7 @@ export class InputComponent extends Droppable implements OnInit {
     // this.acceptableItems.push('Column');
     this._dragData.label = 'Input';
     this._dragData.elementName = 'Input';
-    this._dragData.element = InputComponent;
+    this._dragData.element = InputEditorComponent;
   }
 
   ngOnInit() {

@@ -3,27 +3,19 @@ import { AbstractControl } from '@angular/forms';
 
 import { JsonSchemaFormService } from '../json-schema-form.service';
 
+// TODO: Add this control
+
 @Component({
-  selector: 'hidden-widget',
-  template: `
-    <input *ngIf="boundControl"
-      [formControl]="formControl"
-      [id]="'control' + layoutNode?._id"
-      [name]="controlName"
-      type="hidden">
-    <input *ngIf="!boundControl"
-      [disabled]="controlDisabled"
-      [name]="controlName"
-      [id]="'control' + layoutNode?._id"
-      type="hidden"
-      [value]="controlValue">`,
+  selector: 'file-widget',
+  template: ``,
 })
-export class HiddenComponent implements OnInit {
+export class FileEditorComponent implements OnInit {
   formControl: AbstractControl;
   controlName: string;
   controlValue: any;
   controlDisabled = false;
   boundControl = false;
+  options: any;
   @Input() layoutNode: any;
   @Input() layoutIndex: number[];
   @Input() dataIndex: number[];
@@ -33,6 +25,11 @@ export class HiddenComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.options = this.layoutNode.options || {};
     this.jsf.initializeControl(this);
+  }
+
+  updateValue(event) {
+    this.jsf.updateValue(this, event.target.value);
   }
 }

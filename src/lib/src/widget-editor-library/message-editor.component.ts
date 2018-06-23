@@ -10,7 +10,7 @@ import { JsonSchemaFormService } from '../json-schema-form.service';
       [class]="options?.labelHtmlClass || ''"
       [innerHTML]="message"></span>`,
 })
-export class MessageComponent implements OnInit {
+export class MessageEditorComponent implements OnInit {
   options: any;
   message: string = null;
   @Input() layoutNode: any;

@@ -37,7 +37,7 @@ import { JsonSchemaFormService } from '../json-schema-form.service';
         [innerHTML]="options?.title"></span>
     </label>`,
 })
-export class CheckboxComponent implements OnInit {
+export class CheckboxEditorComponent implements OnInit {
   formControl: AbstractControl;
   controlName: string;
   controlValue: any;

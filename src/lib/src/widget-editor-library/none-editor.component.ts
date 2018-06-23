@@ -5,7 +5,7 @@ import { FormGroup } from '@angular/forms';
   selector: 'none-widget',
   template: ``,
 })
-export class NoneComponent {
+export class NoneEditorComponent {
   @Input() layoutNode: any;
   @Input() layoutIndex: number[];
   @Input() dataIndex: number[];

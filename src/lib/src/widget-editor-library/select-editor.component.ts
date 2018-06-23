@@ -63,7 +63,7 @@ import { buildTitleMap, isArray } from '../shared';
       </select>
     </div>`,
 })
-export class SelectComponent implements OnInit {
+export class SelectEditorComponent implements OnInit {
   formControl: AbstractControl;
   controlName: string;
   controlValue: any;

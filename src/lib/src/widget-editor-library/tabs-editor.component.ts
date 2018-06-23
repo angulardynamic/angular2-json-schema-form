@@ -35,7 +35,7 @@ import { JsonSchemaFormService } from '../json-schema-form.service';
     </div>`,
   styles: [` a { cursor: pointer; } `],
 })
-export class TabsComponent implements OnInit {
+export class TabsEditorComponent implements OnInit {
   options: any;
   itemCount: number;
   selectedItem = 0;
