@@ -6,8 +6,8 @@ import { hasValue, JsonPointer } from '../shared';
 @Component({
   selector: 'root-widget',
   template: `
-  <div dnd-sortable-container [sortableData]="layout">
-    <div *ngFor="let layoutItem of layout; let i = index" 
+
+    <div *ngFor="let layoutItem of layout; let i = index"  dnd-sortable-container   [sortableData]="layout"
       [class.form-flex-item]="isFlexItem"
       [style.align-self]="(layoutItem.options || {})['align-self']"
       [style.flex-basis]="getFlexAttribute(layoutItem, 'flex-basis')"
@@ -25,7 +25,7 @@ import { hasValue, JsonPointer } from '../shared';
           [layoutIndex]="(layoutIndex || []).concat(i)"
           [layoutNode]="layoutItem"></select-framework-widget>
       </div>
-    </div> </div>`,
+     </div>`,
   styles: [`
     [draggable=true] {
       transition: all 150ms cubic-bezier(.4, 0, .2, 1);
