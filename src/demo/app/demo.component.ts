@@ -124,6 +124,10 @@ export class DemoComponent implements OnInit {
     this.liveFormData = data;
   }
 
+  retSchema(data: any) {
+    console.log(data);
+  }
+
   get prettyLiveFormData() {
     return JSON.stringify(this.liveFormData, null, 2);
   }

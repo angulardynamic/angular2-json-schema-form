@@ -69,7 +69,7 @@ import { JsonPointer } from './shared/jsonpointer.functions';
       <script type="text/javascript" [src]="script"></script>
     </div>
     <form class="json-schema-form" (ngSubmit)="submitForm()">
-      <root-widget [layout]="jsf?.layout" ></root-widget>
+      <root-widget (onDrop)="retSchema($event)" [layout]="jsf?.layout" ></root-widget>
     </form>
     <div *ngIf="debug || jsf?.formOptions?.debug">
       Debug output: <pre>{{debugOutput}}</pre>
@@ -195,6 +195,10 @@ export class JsonSchemaFormEditorComponent implements ControlValueAccessor, OnCh
     }
   }
 
+  retSchema($event) {
+    console.log($event);
+    this.formLayout.emit(this.jsf.layout);
+  }
   writeValue(value: any) {
     this.setFormValues(value, false);
     if (!this.formValuesInput) { this.formValuesInput = 'ngModel'; }

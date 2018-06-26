@@ -1,4 +1,4 @@
-import { Component, Input, Host } from '@angular/core';
+import { Component, Input, Host, EventEmitter, Output } from '@angular/core';
 
 import { JsonSchemaFormService } from '../json-schema-form.service';
 import { hasValue, JsonPointer } from '../shared';
@@ -7,14 +7,14 @@ import { hasValue, JsonPointer } from '../shared';
   selector: 'root-widget',
   template: `
 
-    <div *ngFor="let layoutItem of layout; let i = index"  dnd-sortable-container   [sortableData]="layout"
+    <div *ngFor="let layoutItem of layout; let i = index"  dnd-sortable-container [sortableData]="layout"
       [class.form-flex-item]="isFlexItem"
       [style.align-self]="(layoutItem.options || {})['align-self']"
       [style.flex-basis]="getFlexAttribute(layoutItem, 'flex-basis')"
       [style.flex-grow]="getFlexAttribute(layoutItem, 'flex-grow')"
       [style.flex-shrink]="getFlexAttribute(layoutItem, 'flex-shrink')"
       [style.order]="(layoutItem.options || {}).order">
-      <div dnd-sortable [sortableIndex]="i" [dragEnabled]="true"
+      <div dnd-sortable [sortableIndex]="i" [dragEnabled]="true" (onDropSuccess)="backToMain($event)"
       [dragData]="layoutItem"
         [dataIndex]="layoutItem?.arrayItem ? (dataIndex || []).concat(i) : (dataIndex || [])"
         [layoutIndex]="(layoutIndex || []).concat(i)"
@@ -57,10 +57,16 @@ export class RootEditorComponent {
   @Input() isOrderable: boolean;
   @Input() isFlexItem = false;
 
+  @Output() onDrop = new EventEmitter<any>(); 
+
   constructor(
     private jsf: JsonSchemaFormService
   ) { }
 
+  backToMain(data: any) {
+    console.log(data);
+    this.onDrop.emit(data);
+  }
   isDraggable(node: any): boolean {
     return node.arrayItem && node.type !== '$ref' &&
       node.arrayItemType === 'list' && this.isOrderable !== false;
