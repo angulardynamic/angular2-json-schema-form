@@ -125,7 +125,13 @@ export class DemoComponent implements OnInit {
   }
 
   retSchema(data: any) {
-    console.log(data);
+    const temp =  JSON.parse(this.jsonFormSchema);
+    if (temp.layout) {
+      temp.layout = data;
+    }
+    console.log(temp);
+    console.log(JSON.stringify(temp));
+    // this.jsonFormSchema = temp;
   }
 
   get prettyLiveFormData() {
