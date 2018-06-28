@@ -431,7 +431,7 @@ export class JsonSchemaFormEditorComponent implements ControlValueAccessor, OnCh
    */
   private initializeSchema() {
 
-    console.log('JsonSchemaFormComponent.initializeSchema()', 'this.ngModel',
+    console.log('JsonSchemaFormEditorComponent.initializeSchema()', 'this.ngModel',
         this.ngModel, 'this.jsf.formValues', this.jsf.formValues,
         'this.jsf.schema', this.jsf.schema, 'this.data', this.data,
         'this.schema', this.schema, 'this.form', this.form);
