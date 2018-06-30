@@ -2,7 +2,7 @@ import { Component, Input, OnInit, ElementRef, ComponentFactoryResolver, Injecto
     ChangeDetectorRef, HostBinding, ViewContainerRef, ViewChild, Directive
 } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
-import { Droppable } from './abstract/droppable';
+// import { Droppable } from './abstract/droppable';
 import { DragDropService, DragDropConfig } from 'ng2-dnd';
 import { Register, Registerable } from './decorators/register.decorator';
 
@@ -52,12 +52,9 @@ import { JsonSchemaFormService } from '../json-schema-form.service';
           [id]="'control' + layoutNode?._id + 'Autocomplete'">
           <option *ngFor="let word of options?.typeahead?.source" [value]="word">
         </datalist>
-    </div>`,
-    host: {
-        '(onDropSuccess)': 'onDropItem($event)'
-    }
+    </div>`
 })
-export class InputEditorComponent extends Droppable implements OnInit {
+export class InputEditorComponent implements OnInit {
   formControl: AbstractControl;
   controlName: string;
   controlValue: string;
@@ -78,24 +75,24 @@ export class InputEditorComponent extends Droppable implements OnInit {
     protected service: DragDropService,
     protected config: DragDropConfig
   ) {
-    super(element, componentFactory, viewContainerRef, changeDetector, service, config);
+    // super(element, componentFactory, viewContainerRef, changeDetector, service, config);
 
-    super.setSchema({
-        type: 'object',
-        properties: {
-            custom_class: {
-                type: 'string'
-            },
-            center_align: {
-                type: 'boolean'
-            }
-        }
-    });
+    // super.setSchema({
+    //     type: 'object',
+    //     properties: {
+    //         custom_class: {
+    //             type: 'string'
+    //         },
+    //         center_align: {
+    //             type: 'boolean'
+    //         }
+    //     }
+    // });
 
-    // this.acceptableItems.push('Column');
-    this._dragData.label = 'Input';
-    this._dragData.elementName = 'Input';
-    this._dragData.element = InputEditorComponent;
+    // // this.acceptableItems.push('Column');
+    // this._dragData.label = 'Input';
+    // this._dragData.elementName = 'Input';
+    // this._dragData.element = InputEditorComponent;
   }
 
   ngOnInit() {

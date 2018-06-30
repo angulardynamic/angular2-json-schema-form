@@ -37,11 +37,12 @@
   "typings": "./angular2-json-schema-form.d.ts",
   "dependencies": {
     "ajv": "^6.4.0",
-    "lodash": "4.x",
+    "lodash": "^4.17.10",
     "rxjs-compat": "^6.0.0-rc.0"
   },
   "peerDependencies": {
     "@angular/common": "^6.0.0",
-    "@angular/flex-layout": "6.0.0-beta.15"
+    "@angular/flex-layout": "6.0.0-beta.15",
+    "ng2-dnd": "^4.1.0"
   }
 }

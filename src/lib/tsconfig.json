@@ -13,8 +13,8 @@
     "./typings.d.ts"
   ],
   "angularCompilerOptions": {
-    "strictMetadataEmit": true,
-    "skipTemplateCodegen": true,
+    "strictMetadataEmit": false,
+    "skipTemplateCodegen": false,
     "flatModuleOutFile": "angular2-json-schema-form.js",
     "flatModuleId": "angular2-json-schema-form",
     "genDir": "../../out-ngc/lib-gen-dir/"

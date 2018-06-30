@@ -13175,6 +13175,2431 @@ var JsonSchemaFormComponent = (function () {
     return JsonSchemaFormComponent;
 }());
 
+var AddReferenceEditorComponent = (function () {
+    function AddReferenceEditorComponent(jsf) {
+        this.jsf = jsf;
+    }
+    AddReferenceEditorComponent.prototype.ngOnInit = function () {
+        this.options = this.layoutNode.options || {};
+    };
+    Object.defineProperty(AddReferenceEditorComponent.prototype, "showAddButton", {
+        get: function () {
+            return !this.layoutNode.arrayItem ||
+                this.layoutIndex[this.layoutIndex.length - 1] < this.options.maxItems;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    AddReferenceEditorComponent.prototype.addItem = function (event) {
+        event.preventDefault();
+        this.jsf.addItem(this);
+    };
+    Object.defineProperty(AddReferenceEditorComponent.prototype, "buttonText", {
+        get: function () {
+            var parent = {
+                dataIndex: this.dataIndex.slice(0, -1),
+                layoutIndex: this.layoutIndex.slice(0, -1),
+                layoutNode: this.jsf.getParentNode(this)
+            };
+            return parent.layoutNode.add ||
+                this.jsf.setArrayItemTitle(parent, this.layoutNode, this.itemCount);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    AddReferenceEditorComponent.decorators = [
+        { type: Component, args: [{
+                    selector: 'add-reference-widget',
+                    template: "\n    <button *ngIf=\"showAddButton\"\n      [class]=\"options?.fieldHtmlClass || ''\"\n      [disabled]=\"options?.readonly\"\n      (click)=\"addItem($event)\">\n      <span *ngIf=\"options?.icon\" [class]=\"options?.icon\"></span>\n      <span *ngIf=\"options?.title\" [innerHTML]=\"buttonText\"></span>\n    </button>",
+                    changeDetection: ChangeDetectionStrategy.Default,
+                },] },
+    ];
+    AddReferenceEditorComponent.ctorParameters = function () { return [
+        { type: JsonSchemaFormService, },
+    ]; };
+    AddReferenceEditorComponent.propDecorators = {
+        "layoutNode": [{ type: Input },],
+        "layoutIndex": [{ type: Input },],
+        "dataIndex": [{ type: Input },],
+    };
+    return AddReferenceEditorComponent;
+}());
+
+var OneOfEditorComponent = (function () {
+    function OneOfEditorComponent(jsf) {
+        this.jsf = jsf;
+        this.controlDisabled = false;
+        this.boundControl = false;
+    }
+    OneOfEditorComponent.prototype.ngOnInit = function () {
+        this.options = this.layoutNode.options || {};
+        this.jsf.initializeControl(this);
+    };
+    OneOfEditorComponent.prototype.updateValue = function (event) {
+        this.jsf.updateValue(this, event.target.value);
+    };
+    OneOfEditorComponent.decorators = [
+        { type: Component, args: [{
+                    selector: 'one-of-widget',
+                    template: "",
+                },] },
+    ];
+    OneOfEditorComponent.ctorParameters = function () { return [
+        { type: JsonSchemaFormService, },
+    ]; };
+    OneOfEditorComponent.propDecorators = {
+        "layoutNode": [{ type: Input },],
+        "layoutIndex": [{ type: Input },],
+        "dataIndex": [{ type: Input },],
+    };
+    return OneOfEditorComponent;
+}());
+
+var ButtonEditorComponent = (function () {
+    function ButtonEditorComponent(jsf) {
+        this.jsf = jsf;
+        this.controlDisabled = false;
+        this.boundControl = false;
+    }
+    ButtonEditorComponent.prototype.ngOnInit = function () {
+        this.options = this.layoutNode.options || {};
+        this.jsf.initializeControl(this);
+    };
+    ButtonEditorComponent.prototype.updateValue = function (event) {
+        if (typeof this.options.onClick === 'function') {
+            this.options.onClick(event);
+        }
+        else {
+            this.jsf.updateValue(this, event.target.value);
+        }
+    };
+    ButtonEditorComponent.decorators = [
+        { type: Component, args: [{
+                    selector: 'button-widget',
+                    template: "\n    <div\n      [class]=\"options?.htmlClass || ''\">\n      <button\n        [attr.readonly]=\"options?.readonly ? 'readonly' : null\"\n        [attr.aria-describedby]=\"'control' + layoutNode?._id + 'Status'\"\n        [class]=\"options?.fieldHtmlClass || ''\"\n        [disabled]=\"controlDisabled\"\n        [name]=\"controlName\"\n        [type]=\"layoutNode?.type\"\n        [value]=\"controlValue\"\n        (click)=\"updateValue($event)\">\n        <span *ngIf=\"options?.icon || options?.title\"\n          [class]=\"options?.icon\"\n          [innerHTML]=\"options?.title\"></span>\n      </button>\n    </div>",
+                },] },
+    ];
+    ButtonEditorComponent.ctorParameters = function () { return [
+        { type: JsonSchemaFormService, },
+    ]; };
+    ButtonEditorComponent.propDecorators = {
+        "layoutNode": [{ type: Input },],
+        "layoutIndex": [{ type: Input },],
+        "dataIndex": [{ type: Input },],
+    };
+    return ButtonEditorComponent;
+}());
+
+var CheckboxEditorComponent = (function () {
+    function CheckboxEditorComponent(jsf) {
+        this.jsf = jsf;
+        this.controlDisabled = false;
+        this.boundControl = false;
+        this.trueValue = true;
+        this.falseValue = false;
+    }
+    CheckboxEditorComponent.prototype.ngOnInit = function () {
+        this.options = this.layoutNode.options || {};
+        this.jsf.initializeControl(this);
+        if (this.controlValue === null || this.controlValue === undefined) {
+            this.controlValue = this.options.title;
+        }
+    };
+    CheckboxEditorComponent.prototype.updateValue = function (event) {
+        event.preventDefault();
+        this.jsf.updateValue(this, event.target.checked ? this.trueValue : this.falseValue);
+    };
+    Object.defineProperty(CheckboxEditorComponent.prototype, "isChecked", {
+        get: function () {
+            return this.jsf.getFormControlValue(this) === this.trueValue;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    CheckboxEditorComponent.decorators = [
+        { type: Component, args: [{
+                    selector: 'checkbox-widget',
+                    template: "\n    <label\n      [attr.for]=\"'control' + layoutNode?._id\"\n      [class]=\"options?.itemLabelHtmlClass || ''\">\n      <input *ngIf=\"boundControl\"\n        [formControl]=\"formControl\"\n        [attr.aria-describedby]=\"'control' + layoutNode?._id + 'Status'\"\n        [class]=\"(options?.fieldHtmlClass || '') + (isChecked ?\n          (' ' + (options?.activeClass || '') + ' ' + (options?.style?.selected || '')) :\n          (' ' + (options?.style?.unselected || '')))\"\n        [id]=\"'control' + layoutNode?._id\"\n        [name]=\"controlName\"\n        [readonly]=\"options?.readonly ? 'readonly' : null\"\n        type=\"checkbox\">\n      <input *ngIf=\"!boundControl\"\n        [attr.aria-describedby]=\"'control' + layoutNode?._id + 'Status'\"\n        [checked]=\"isChecked ? 'checked' : null\"\n        [class]=\"(options?.fieldHtmlClass || '') + (isChecked ?\n          (' ' + (options?.activeClass || '') + ' ' + (options?.style?.selected || '')) :\n          (' ' + (options?.style?.unselected || '')))\"\n        [disabled]=\"controlDisabled\"\n        [id]=\"'control' + layoutNode?._id\"\n        [name]=\"controlName\"\n        [readonly]=\"options?.readonly ? 'readonly' : null\"\n        [value]=\"controlValue\"\n        type=\"checkbox\"\n        (change)=\"updateValue($event)\">\n      <span *ngIf=\"options?.title\"\n        [style.display]=\"options?.notitle ? 'none' : ''\"\n        [innerHTML]=\"options?.title\"></span>\n    </label>",
+                },] },
+    ];
+    CheckboxEditorComponent.ctorParameters = function () { return [
+        { type: JsonSchemaFormService, },
+    ]; };
+    CheckboxEditorComponent.propDecorators = {
+        "layoutNode": [{ type: Input },],
+        "layoutIndex": [{ type: Input },],
+        "dataIndex": [{ type: Input },],
+    };
+    return CheckboxEditorComponent;
+}());
+
+var CheckboxesEditorComponent = (function () {
+    function CheckboxesEditorComponent(jsf) {
+        this.jsf = jsf;
+        this.controlDisabled = false;
+        this.boundControl = false;
+        this.checkboxList = [];
+    }
+    CheckboxesEditorComponent.prototype.ngOnInit = function () {
+        this.options = this.layoutNode.options || {};
+        this.layoutOrientation = (this.layoutNode.type === 'checkboxes-inline' ||
+            this.layoutNode.type === 'checkboxbuttons') ? 'horizontal' : 'vertical';
+        this.jsf.initializeControl(this);
+        this.checkboxList = buildTitleMap(this.options.titleMap || this.options.enumNames, this.options.enum, true);
+        if (this.boundControl) {
+            var formArray_1 = this.jsf.getFormControl(this);
+            this.checkboxList.forEach(function (checkboxItem) {
+                return checkboxItem.checked = formArray_1.value.includes(checkboxItem.value);
+            });
+        }
+    };
+    CheckboxesEditorComponent.prototype.updateValue = function (event) {
+        for (var _i = 0, _a = this.checkboxList; _i < _a.length; _i++) {
+            var checkboxItem = _a[_i];
+            if (event.target.value === checkboxItem.value) {
+                checkboxItem.checked = event.target.checked;
+            }
+        }
+        if (this.boundControl) {
+            this.jsf.updateArrayCheckboxList(this, this.checkboxList);
+        }
+    };
+    CheckboxesEditorComponent.decorators = [
+        { type: Component, args: [{
+                    selector: 'checkboxes-widget',
+                    template: "\n    <label *ngIf=\"options?.title\"\n      [class]=\"options?.labelHtmlClass || ''\"\n      [style.display]=\"options?.notitle ? 'none' : ''\"\n      [innerHTML]=\"options?.title\"></label>\n\n    <!-- 'horizontal' = checkboxes-inline or checkboxbuttons -->\n    <div *ngIf=\"layoutOrientation === 'horizontal'\" [class]=\"options?.htmlClass || ''\">\n      <label *ngFor=\"let checkboxItem of checkboxList\"\n        [attr.for]=\"'control' + layoutNode?._id + '/' + checkboxItem.value\"\n        [class]=\"(options?.itemLabelHtmlClass || '') + (checkboxItem.checked ?\n          (' ' + (options?.activeClass || '') + ' ' + (options?.style?.selected || '')) :\n          (' ' + (options?.style?.unselected || '')))\">\n        <input type=\"checkbox\"\n          [attr.required]=\"options?.required\"\n          [checked]=\"checkboxItem.checked\"\n          [class]=\"options?.fieldHtmlClass || ''\"\n          [disabled]=\"controlDisabled\"\n          [id]=\"'control' + layoutNode?._id + '/' + checkboxItem.value\"\n          [name]=\"checkboxItem?.name\"\n          [readonly]=\"options?.readonly ? 'readonly' : null\"\n          [value]=\"checkboxItem.value\"\n          (change)=\"updateValue($event)\">\n        <span [innerHTML]=\"checkboxItem.name\"></span>\n      </label>\n    </div>\n\n    <!-- 'vertical' = regular checkboxes -->\n    <div *ngIf=\"layoutOrientation === 'vertical'\">\n      <div *ngFor=\"let checkboxItem of checkboxList\" [class]=\"options?.htmlClass || ''\">\n        <label\n          [attr.for]=\"'control' + layoutNode?._id + '/' + checkboxItem.value\"\n          [class]=\"(options?.itemLabelHtmlClass || '') + (checkboxItem.checked ?\n            (' ' + (options?.activeClass || '') + ' ' + (options?.style?.selected || '')) :\n            (' ' + (options?.style?.unselected || '')))\">\n          <input type=\"checkbox\"\n            [attr.required]=\"options?.required\"\n            [checked]=\"checkboxItem.checked\"\n            [class]=\"options?.fieldHtmlClass || ''\"\n            [disabled]=\"controlDisabled\"\n            [id]=\"options?.name + '/' + checkboxItem.value\"\n            [name]=\"checkboxItem?.name\"\n            [readonly]=\"options?.readonly ? 'readonly' : null\"\n            [value]=\"checkboxItem.value\"\n            (change)=\"updateValue($event)\">\n          <span [innerHTML]=\"checkboxItem?.name\"></span>\n        </label>\n      </div>\n    </div>",
+                },] },
+    ];
+    CheckboxesEditorComponent.ctorParameters = function () { return [
+        { type: JsonSchemaFormService, },
+    ]; };
+    CheckboxesEditorComponent.propDecorators = {
+        "layoutNode": [{ type: Input },],
+        "layoutIndex": [{ type: Input },],
+        "dataIndex": [{ type: Input },],
+    };
+    return CheckboxesEditorComponent;
+}());
+
+var FileEditorComponent = (function () {
+    function FileEditorComponent(jsf) {
+        this.jsf = jsf;
+        this.controlDisabled = false;
+        this.boundControl = false;
+    }
+    FileEditorComponent.prototype.ngOnInit = function () {
+        this.options = this.layoutNode.options || {};
+        this.jsf.initializeControl(this);
+    };
+    FileEditorComponent.prototype.updateValue = function (event) {
+        this.jsf.updateValue(this, event.target.value);
+    };
+    FileEditorComponent.decorators = [
+        { type: Component, args: [{
+                    selector: 'file-widget',
+                    template: "",
+                },] },
+    ];
+    FileEditorComponent.ctorParameters = function () { return [
+        { type: JsonSchemaFormService, },
+    ]; };
+    FileEditorComponent.propDecorators = {
+        "layoutNode": [{ type: Input },],
+        "layoutIndex": [{ type: Input },],
+        "dataIndex": [{ type: Input },],
+    };
+    return FileEditorComponent;
+}());
+
+/**
+ * Check and return true if an object is type of string
+ */
+/**
+ * Check and return true if an object is type of string
+ */ function isString$1(obj) {
+    return typeof obj === "string";
+}
+/**
+ * Check and return true if an object not undefined or null
+ */
+function isPresent(obj) {
+    return obj !== undefined && obj !== null;
+}
+/**
+ * Check and return true if an object is type of Function
+ */
+function isFunction$2(obj) {
+    return typeof obj === "function";
+}
+/**
+ * Create Image element with specified url string
+ */
+function createImage(src) {
+    var img = new HTMLImageElement();
+    img.src = src;
+    return img;
+}
+/**
+ * Call the function
+ */
+function callFun(fun) {
+    return fun();
+}
+
+// Copyright (C) 2016 Sergey Akopkokhyants
+var DataTransferEffect = (function () {
+    function DataTransferEffect(name) {
+        this.name = name;
+    }
+    return DataTransferEffect;
+}());
+DataTransferEffect.COPY = new DataTransferEffect('copy');
+DataTransferEffect.LINK = new DataTransferEffect('link');
+DataTransferEffect.MOVE = new DataTransferEffect('move');
+DataTransferEffect.NONE = new DataTransferEffect('none');
+var DragDropConfig = (function () {
+    function DragDropConfig() {
+        this.onDragStartClass = "dnd-drag-start";
+        this.onDragEnterClass = "dnd-drag-enter";
+        this.onDragOverClass = "dnd-drag-over";
+        this.onSortableDragClass = "dnd-sortable-drag";
+        this.dragEffect = DataTransferEffect.MOVE;
+        this.dropEffect = DataTransferEffect.MOVE;
+        this.dragCursor = "move";
+        this.defaultCursor = "pointer";
+    }
+    return DragDropConfig;
+}());
+
+// Copyright (C) 2016 Sergey Akopkokhyants
+function dragDropServiceFactory() {
+    return new DragDropService();
+}
+var DragDropService = (function () {
+    function DragDropService() {
+        this.allowedDropZones = [];
+    }
+    return DragDropService;
+}());
+DragDropService.decorators = [
+    { type: Injectable },
+];
+/** @nocollapse */
+DragDropService.ctorParameters = function () { return []; };
+function dragDropSortableServiceFactory(config) {
+    return new DragDropSortableService(config);
+}
+var DragDropSortableService = (function () {
+    function DragDropSortableService(_config) {
+        this._config = _config;
+    }
+    Object.defineProperty(DragDropSortableService.prototype, "elem", {
+        get: function () {
+            return this._elem;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    DragDropSortableService.prototype.markSortable = function (elem) {
+        if (isPresent(this._elem)) {
+            this._elem.classList.remove(this._config.onSortableDragClass);
+        }
+        if (isPresent(elem)) {
+            this._elem = elem;
+            this._elem.classList.add(this._config.onSortableDragClass);
+        }
+    };
+    return DragDropSortableService;
+}());
+DragDropSortableService.decorators = [
+    { type: Injectable },
+];
+/** @nocollapse */
+DragDropSortableService.ctorParameters = function () { return [
+    { type: DragDropConfig, },
+]; };
+
+// Copyright (C) 2016 Sergey Akopkokhyants
+var AbstractComponent = (function () {
+    function AbstractComponent(elemRef, _dragDropService, _config, _cdr) {
+        var _this = this;
+        this._dragDropService = _dragDropService;
+        this._config = _config;
+        this._cdr = _cdr;
+        /**
+         * Whether the object is draggable. Default is true.
+         */
+        this._dragEnabled = false;
+        /**
+         * Allows drop on this element
+         */
+        this.dropEnabled = false;
+        this.dropZones = [];
+        this.cloneItem = false;
+        // Assign default cursor unless overridden
+        this._defaultCursor = _config.defaultCursor;
+        this._elem = elemRef.nativeElement;
+        this._elem.style.cursor = this._defaultCursor; // set default cursor on our element
+        //
+        // DROP events
+        //
+        this._elem.ondragenter = function (event) {
+            _this._onDragEnter(event);
+        };
+        this._elem.ondragover = function (event) {
+            _this._onDragOver(event);
+            //
+            if (event.dataTransfer != null) {
+                event.dataTransfer.dropEffect = _this._config.dropEffect.name;
+            }
+            return false;
+        };
+        this._elem.ondragleave = function (event) {
+            _this._onDragLeave(event);
+        };
+        this._elem.ondrop = function (event) {
+            _this._onDrop(event);
+        };
+        //
+        // Drag events
+        //
+        this._elem.onmousedown = function (event) {
+            _this._target = event.target;
+        };
+        this._elem.ondragstart = function (event) {
+            if (_this._dragHandle) {
+                if (!_this._dragHandle.contains(_this._target)) {
+                    event.preventDefault();
+                    return;
+                }
+            }
+            _this._onDragStart(event);
+            //
+            if (event.dataTransfer != null) {
+                event.dataTransfer.setData('text', '');
+                // Change drag effect
+                event.dataTransfer.effectAllowed = _this.effectAllowed || _this._config.dragEffect.name;
+                // Change drag image
+                if (isPresent(_this.dragImage)) {
+                    if (isString$1(_this.dragImage)) {
+                        event.dataTransfer.setDragImage(createImage(_this.dragImage));
+                    }
+                    else if (isFunction$2(_this.dragImage)) {
+                        event.dataTransfer.setDragImage(callFun(_this.dragImage));
+                    }
+                    else {
+                        var img = _this.dragImage;
+                        event.dataTransfer.setDragImage(img.imageElement, img.x_offset, img.y_offset);
+                    }
+                }
+                else if (isPresent(_this._config.dragImage)) {
+                    var dragImage = _this._config.dragImage;
+                    event.dataTransfer.setDragImage(dragImage.imageElement, dragImage.x_offset, dragImage.y_offset);
+                }
+                else if (_this.cloneItem) {
+                    _this._dragHelper = _this._elem.cloneNode(true);
+                    _this._dragHelper.classList.add('dnd-drag-item');
+                    _this._dragHelper.style.position = "absolute";
+                    _this._dragHelper.style.top = "0px";
+                    _this._dragHelper.style.left = "-1000px";
+                    _this._elem.parentElement.appendChild(_this._dragHelper);
+                    event.dataTransfer.setDragImage(_this._dragHelper, event.offsetX, event.offsetY);
+                }
+                // Change drag cursor
+                var cursorelem = (_this._dragHandle) ? _this._dragHandle : _this._elem;
+                if (_this._dragEnabled) {
+                    cursorelem.style.cursor = _this.effectCursor ? _this.effectCursor : _this._config.dragCursor;
+                }
+                else {
+                    cursorelem.style.cursor = _this._defaultCursor;
+                }
+            }
+        };
+        this._elem.ondragend = function (event) {
+            if (_this._elem.parentElement && _this._dragHelper) {
+                _this._elem.parentElement.removeChild(_this._dragHelper);
+            }
+            // console.log('ondragend', event.target);
+            _this._onDragEnd(event);
+            // Restore style of dragged element
+            var cursorelem = (_this._dragHandle) ? _this._dragHandle : _this._elem;
+            cursorelem.style.cursor = _this._defaultCursor;
+        };
+    }
+    Object.defineProperty(AbstractComponent.prototype, "dragEnabled", {
+        get: function () {
+            return this._dragEnabled;
+        },
+        set: function (enabled) {
+            this._dragEnabled = !!enabled;
+            this._elem.draggable = this._dragEnabled;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    AbstractComponent.prototype.setDragHandle = function (elem) {
+        this._dragHandle = elem;
+    };
+    /******* Change detection ******/
+    AbstractComponent.prototype.detectChanges = function () {
+        var _this = this;
+        // Programmatically run change detection to fix issue in Safari
+        setTimeout(function () {
+            _this._cdr.detectChanges();
+        }, 250);
+    };
+    //****** Droppable *******//
+    AbstractComponent.prototype._onDragEnter = function (event) {
+        // console.log('ondragenter._isDropAllowed', this._isDropAllowed);
+        if (this._isDropAllowed(event)) {
+            // event.preventDefault();
+            this._onDragEnterCallback(event);
+        }
+    };
+    AbstractComponent.prototype._onDragOver = function (event) {
+        // // console.log('ondragover._isDropAllowed', this._isDropAllowed);
+        if (this._isDropAllowed(event)) {
+            // The element is over the same source element - do nothing
+            if (event.preventDefault) {
+                // Necessary. Allows us to drop.
+                event.preventDefault();
+            }
+            this._onDragOverCallback(event);
+        }
+    };
+    AbstractComponent.prototype._onDragLeave = function (event) {
+        // console.log('ondragleave._isDropAllowed', this._isDropAllowed);
+        if (this._isDropAllowed(event)) {
+            // event.preventDefault();
+            this._onDragLeaveCallback(event);
+        }
+    };
+    AbstractComponent.prototype._onDrop = function (event) {
+        // Necessary. Allows us to drop.
+        this._preventAndStop(event);
+        // console.log('ondrop._isDropAllowed', this._isDropAllowed);
+        if (this._isDropAllowed(event)) {
+            this._onDropCallback(event);
+            this.detectChanges();
+        }
+    };
+    AbstractComponent.prototype._isDropAllowed = function (event) {
+        if ((this._dragDropService.isDragged || (event.dataTransfer && event.dataTransfer.files)) && this.dropEnabled) {
+            // First, if `allowDrop` is set, call it to determine whether the
+            // dragged element can be dropped here.
+            if (this.allowDrop) {
+                return this.allowDrop(this._dragDropService.dragData);
+            }
+            // Otherwise, use dropZones if they are set.
+            if (this.dropZones.length === 0 && this._dragDropService.allowedDropZones.length === 0) {
+                return true;
+            }
+            for (var i = 0; i < this._dragDropService.allowedDropZones.length; i++) {
+                var dragZone = this._dragDropService.allowedDropZones[i];
+                if (this.dropZones.indexOf(dragZone) !== -1) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    };
+    AbstractComponent.prototype._preventAndStop = function (event) {
+        if (event.preventDefault) {
+            event.preventDefault();
+        }
+        if (event.stopPropagation) {
+            event.stopPropagation();
+        }
+    };
+    //*********** Draggable **********//
+    AbstractComponent.prototype._onDragStart = function (event) {
+        //console.log('ondragstart.dragEnabled', this._dragEnabled);
+        if (this._dragEnabled) {
+            this._dragDropService.allowedDropZones = this.dropZones;
+            // console.log('ondragstart.allowedDropZones', this._dragDropService.allowedDropZones);
+            this._onDragStartCallback(event);
+        }
+    };
+    AbstractComponent.prototype._onDragEnd = function (event) {
+        this._dragDropService.allowedDropZones = [];
+        // console.log('ondragend.allowedDropZones', this._dragDropService.allowedDropZones);
+        this._onDragEndCallback(event);
+    };
+    //**** Drop Callbacks ****//
+    AbstractComponent.prototype._onDragEnterCallback = function (event) { };
+    AbstractComponent.prototype._onDragOverCallback = function (event) { };
+    AbstractComponent.prototype._onDragLeaveCallback = function (event) { };
+    AbstractComponent.prototype._onDropCallback = function (event) { };
+    //**** Drag Callbacks ****//
+    AbstractComponent.prototype._onDragStartCallback = function (event) { };
+    AbstractComponent.prototype._onDragEndCallback = function (event) { };
+    return AbstractComponent;
+}());
+AbstractComponent.decorators = [
+    { type: Injectable },
+];
+/** @nocollapse */
+AbstractComponent.ctorParameters = function () { return [
+    { type: ElementRef, },
+    { type: DragDropService, },
+    { type: DragDropConfig, },
+    { type: ChangeDetectorRef, },
+]; };
+var AbstractHandleComponent = (function () {
+    function AbstractHandleComponent(elemRef, _dragDropService, _config, _Component, _cdr) {
+        this._dragDropService = _dragDropService;
+        this._config = _config;
+        this._Component = _Component;
+        this._cdr = _cdr;
+        this._elem = elemRef.nativeElement;
+        this._Component.setDragHandle(this._elem);
+    }
+    return AbstractHandleComponent;
+}());
+
+// Copyright (C) 2016 Sergey Akopkokhyants
+// This project is licensed under the terms of the MIT license.
+// https://github.com/akserg/ng2-dnd
+var __extends$1 = (undefined && undefined.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var DraggableComponent = (function (_super) {
+    __extends$1(DraggableComponent, _super);
+    function DraggableComponent(elemRef, dragDropService, config, cdr) {
+        var _this = _super.call(this, elemRef, dragDropService, config, cdr) || this;
+        /**
+         * Callback function called when the drag actions happened.
+         */
+        _this.onDragStart = new EventEmitter();
+        _this.onDragEnd = new EventEmitter();
+        /**
+         * Callback function called when the drag action ends with a valid drop action.
+         * It is activated after the on-drop-success callback
+         */
+        _this.onDragSuccessCallback = new EventEmitter();
+        _this._defaultCursor = _this._elem.style.cursor;
+        _this.dragEnabled = true;
+        return _this;
+    }
+    Object.defineProperty(DraggableComponent.prototype, "draggable", {
+        set: function (value) {
+            this.dragEnabled = !!value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(DraggableComponent.prototype, "dropzones", {
+        set: function (value) {
+            this.dropZones = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(DraggableComponent.prototype, "effectallowed", {
+        /**
+         * Drag allowed effect
+         */
+        set: function (value) {
+            this.effectAllowed = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(DraggableComponent.prototype, "effectcursor", {
+        /**
+         * Drag effect cursor
+         */
+        set: function (value) {
+            this.effectCursor = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    DraggableComponent.prototype._onDragStartCallback = function (event) {
+        this._dragDropService.isDragged = true;
+        this._dragDropService.dragData = this.dragData;
+        this._dragDropService.onDragSuccessCallback = this.onDragSuccessCallback;
+        this._elem.classList.add(this._config.onDragStartClass);
+        //
+        this.onDragStart.emit({ dragData: this.dragData, mouseEvent: event });
+    };
+    DraggableComponent.prototype._onDragEndCallback = function (event) {
+        this._dragDropService.isDragged = false;
+        this._dragDropService.dragData = null;
+        this._dragDropService.onDragSuccessCallback = null;
+        this._elem.classList.remove(this._config.onDragStartClass);
+        //
+        this.onDragEnd.emit({ dragData: this.dragData, mouseEvent: event });
+    };
+    return DraggableComponent;
+}(AbstractComponent));
+DraggableComponent.decorators = [
+    { type: Directive, args: [{ selector: '[dnd-draggable]' },] },
+];
+/** @nocollapse */
+DraggableComponent.ctorParameters = function () { return [
+    { type: ElementRef, },
+    { type: DragDropService, },
+    { type: DragDropConfig, },
+    { type: ChangeDetectorRef, },
+]; };
+DraggableComponent.propDecorators = {
+    'draggable': [{ type: Input, args: ["dragEnabled",] },],
+    'onDragStart': [{ type: Output },],
+    'onDragEnd': [{ type: Output },],
+    'dragData': [{ type: Input },],
+    'onDragSuccessCallback': [{ type: Output, args: ["onDragSuccess",] },],
+    'dropzones': [{ type: Input, args: ["dropZones",] },],
+    'effectallowed': [{ type: Input, args: ["effectAllowed",] },],
+    'effectcursor': [{ type: Input, args: ["effectCursor",] },],
+    'dragImage': [{ type: Input },],
+    'cloneItem': [{ type: Input },],
+};
+var DraggableHandleComponent = (function (_super) {
+    __extends$1(DraggableHandleComponent, _super);
+    function DraggableHandleComponent(elemRef, dragDropService, config, _Component, cdr) {
+        return _super.call(this, elemRef, dragDropService, config, _Component, cdr) || this;
+    }
+    return DraggableHandleComponent;
+}(AbstractHandleComponent));
+DraggableHandleComponent.decorators = [
+    { type: Directive, args: [{ selector: '[dnd-draggable-handle]' },] },
+];
+/** @nocollapse */
+DraggableHandleComponent.ctorParameters = function () { return [
+    { type: ElementRef, },
+    { type: DragDropService, },
+    { type: DragDropConfig, },
+    { type: DraggableComponent, },
+    { type: ChangeDetectorRef, },
+]; };
+
+// Copyright (C) 2016 Sergey Akopkokhyants
+// This project is licensed under the terms of the MIT license.
+// https://github.com/akserg/ng2-dnd
+var __extends$2 = (undefined && undefined.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var DroppableComponent = (function (_super) {
+    __extends$2(DroppableComponent, _super);
+    function DroppableComponent(elemRef, dragDropService, config, cdr) {
+        var _this = _super.call(this, elemRef, dragDropService, config, cdr) || this;
+        /**
+         * Callback function called when the drop action completes correctly.
+         * It is activated before the on-drag-success callback.
+         */
+        _this.onDropSuccess = new EventEmitter();
+        _this.onDragEnter = new EventEmitter();
+        _this.onDragOver = new EventEmitter();
+        _this.onDragLeave = new EventEmitter();
+        _this.dropEnabled = true;
+        return _this;
+    }
+    Object.defineProperty(DroppableComponent.prototype, "droppable", {
+        set: function (value) {
+            this.dropEnabled = !!value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(DroppableComponent.prototype, "allowdrop", {
+        set: function (value) {
+            this.allowDrop = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(DroppableComponent.prototype, "dropzones", {
+        set: function (value) {
+            this.dropZones = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(DroppableComponent.prototype, "effectallowed", {
+        /**
+         * Drag allowed effect
+         */
+        set: function (value) {
+            this.effectAllowed = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(DroppableComponent.prototype, "effectcursor", {
+        /**
+         * Drag effect cursor
+         */
+        set: function (value) {
+            this.effectCursor = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    DroppableComponent.prototype._onDragEnterCallback = function (event) {
+        if (this._dragDropService.isDragged) {
+            this._elem.classList.add(this._config.onDragEnterClass);
+            this.onDragEnter.emit({ dragData: this._dragDropService.dragData, mouseEvent: event });
+        }
+    };
+    DroppableComponent.prototype._onDragOverCallback = function (event) {
+        if (this._dragDropService.isDragged) {
+            this._elem.classList.add(this._config.onDragOverClass);
+            this.onDragOver.emit({ dragData: this._dragDropService.dragData, mouseEvent: event });
+        }
+    };
+    DroppableComponent.prototype._onDragLeaveCallback = function (event) {
+        if (this._dragDropService.isDragged) {
+            this._elem.classList.remove(this._config.onDragOverClass);
+            this._elem.classList.remove(this._config.onDragEnterClass);
+            this.onDragLeave.emit({ dragData: this._dragDropService.dragData, mouseEvent: event });
+        }
+    };
+    DroppableComponent.prototype._onDropCallback = function (event) {
+        var dataTransfer = event.dataTransfer;
+        if (this._dragDropService.isDragged || (dataTransfer && dataTransfer.files)) {
+            this.onDropSuccess.emit({ dragData: this._dragDropService.dragData, mouseEvent: event });
+            if (this._dragDropService.onDragSuccessCallback) {
+                this._dragDropService.onDragSuccessCallback.emit({ dragData: this._dragDropService.dragData, mouseEvent: event });
+            }
+            this._elem.classList.remove(this._config.onDragOverClass);
+            this._elem.classList.remove(this._config.onDragEnterClass);
+        }
+    };
+    return DroppableComponent;
+}(AbstractComponent));
+DroppableComponent.decorators = [
+    { type: Directive, args: [{ selector: '[dnd-droppable]' },] },
+];
+/** @nocollapse */
+DroppableComponent.ctorParameters = function () { return [
+    { type: ElementRef, },
+    { type: DragDropService, },
+    { type: DragDropConfig, },
+    { type: ChangeDetectorRef, },
+]; };
+DroppableComponent.propDecorators = {
+    'droppable': [{ type: Input, args: ["dropEnabled",] },],
+    'onDropSuccess': [{ type: Output },],
+    'onDragEnter': [{ type: Output },],
+    'onDragOver': [{ type: Output },],
+    'onDragLeave': [{ type: Output },],
+    'allowdrop': [{ type: Input, args: ["allowDrop",] },],
+    'dropzones': [{ type: Input, args: ["dropZones",] },],
+    'effectallowed': [{ type: Input, args: ["effectAllowed",] },],
+    'effectcursor': [{ type: Input, args: ["effectCursor",] },],
+};
+
+// Copyright (C) 2016 Sergey Akopkokhyants
+// This project is licensed under the terms of the MIT license.
+// https://github.com/akserg/ng2-dnd
+var __extends$3 = (undefined && undefined.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var SortableContainer = (function (_super) {
+    __extends$3(SortableContainer, _super);
+    function SortableContainer(elemRef, dragDropService, config, cdr, _sortableDataService) {
+        var _this = _super.call(this, elemRef, dragDropService, config, cdr) || this;
+        _this._sortableDataService = _sortableDataService;
+        _this._sortableData = [];
+        _this.dragEnabled = false;
+        return _this;
+    }
+    Object.defineProperty(SortableContainer.prototype, "draggable", {
+        set: function (value) {
+            this.dragEnabled = !!value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(SortableContainer.prototype, "sortableData", {
+        get: function () {
+            return this._sortableData;
+        },
+        set: function (sortableData) {
+            this._sortableData = sortableData;
+            //
+            this.dropEnabled = !!this._sortableData;
+            // console.log("collection is changed, drop enabled: " + this.dropEnabled);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(SortableContainer.prototype, "dropzones", {
+        set: function (value) {
+            this.dropZones = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    SortableContainer.prototype._onDragEnterCallback = function (event) {
+        if (this._sortableDataService.isDragged) {
+            var item = this._sortableDataService.sortableContainer._sortableData[this._sortableDataService.index];
+            // Check does element exist in sortableData of this Container
+            if (this._sortableData.indexOf(item) === -1) {
+                // Let's add it
+                // console.log('Container._onDragEnterCallback. drag node [' + this._sortableDataService.index.toString() + '] over parent node');
+                // Remove item from previouse list
+                this._sortableDataService.sortableContainer._sortableData.splice(this._sortableDataService.index, 1);
+                if (this._sortableDataService.sortableContainer._sortableData.length === 0) {
+                    this._sortableDataService.sortableContainer.dropEnabled = true;
+                }
+                // Add item to new list
+                this._sortableData.unshift(item);
+                this._sortableDataService.sortableContainer = this;
+                this._sortableDataService.index = 0;
+            }
+            // Refresh changes in properties of container component
+            this.detectChanges();
+        }
+    };
+    return SortableContainer;
+}(AbstractComponent));
+SortableContainer.decorators = [
+    { type: Directive, args: [{ selector: '[dnd-sortable-container]' },] },
+];
+/** @nocollapse */
+SortableContainer.ctorParameters = function () { return [
+    { type: ElementRef, },
+    { type: DragDropService, },
+    { type: DragDropConfig, },
+    { type: ChangeDetectorRef, },
+    { type: DragDropSortableService, },
+]; };
+SortableContainer.propDecorators = {
+    'draggable': [{ type: Input, args: ["dragEnabled",] },],
+    'sortableData': [{ type: Input },],
+    'dropzones': [{ type: Input, args: ["dropZones",] },],
+};
+var SortableComponent = (function (_super) {
+    __extends$3(SortableComponent, _super);
+    function SortableComponent(elemRef, dragDropService, config, _sortableContainer, _sortableDataService, cdr) {
+        var _this = _super.call(this, elemRef, dragDropService, config, cdr) || this;
+        _this._sortableContainer = _sortableContainer;
+        _this._sortableDataService = _sortableDataService;
+        /**
+         * Callback function called when the drag action ends with a valid drop action.
+         * It is activated after the on-drop-success callback
+         */
+        _this.onDragSuccessCallback = new EventEmitter();
+        _this.onDragStartCallback = new EventEmitter();
+        _this.onDragOverCallback = new EventEmitter();
+        _this.onDragEndCallback = new EventEmitter();
+        _this.onDropSuccessCallback = new EventEmitter();
+        _this.dropZones = _this._sortableContainer.dropZones;
+        _this.dragEnabled = true;
+        _this.dropEnabled = true;
+        return _this;
+    }
+    Object.defineProperty(SortableComponent.prototype, "draggable", {
+        set: function (value) {
+            this.dragEnabled = !!value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(SortableComponent.prototype, "droppable", {
+        set: function (value) {
+            this.dropEnabled = !!value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(SortableComponent.prototype, "effectallowed", {
+        /**
+         * Drag allowed effect
+         */
+        set: function (value) {
+            this.effectAllowed = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(SortableComponent.prototype, "effectcursor", {
+        /**
+         * Drag effect cursor
+         */
+        set: function (value) {
+            this.effectCursor = value;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    SortableComponent.prototype._onDragStartCallback = function (event) {
+        // console.log('_onDragStartCallback. dragging elem with index ' + this.index);
+        this._sortableDataService.isDragged = true;
+        this._sortableDataService.sortableContainer = this._sortableContainer;
+        this._sortableDataService.index = this.index;
+        this._sortableDataService.markSortable(this._elem);
+        // Add dragData
+        this._dragDropService.isDragged = true;
+        this._dragDropService.dragData = this.dragData;
+        this._dragDropService.onDragSuccessCallback = this.onDragSuccessCallback;
+        //
+        this.onDragStartCallback.emit(this._dragDropService.dragData);
+    };
+    SortableComponent.prototype._onDragOverCallback = function (event) {
+        if (this._sortableDataService.isDragged && this._elem !== this._sortableDataService.elem) {
+            // console.log('_onDragOverCallback. dragging elem with index ' + this.index);
+            this._sortableDataService.sortableContainer = this._sortableContainer;
+            this._sortableDataService.index = this.index;
+            this._sortableDataService.markSortable(this._elem);
+            this.onDragOverCallback.emit(this._dragDropService.dragData);
+        }
+    };
+    SortableComponent.prototype._onDragEndCallback = function (event) {
+        // console.log('_onDragEndCallback. end dragging elem with index ' + this.index);
+        this._sortableDataService.isDragged = false;
+        this._sortableDataService.sortableContainer = null;
+        this._sortableDataService.index = null;
+        this._sortableDataService.markSortable(null);
+        // Add dragGata
+        this._dragDropService.isDragged = false;
+        this._dragDropService.dragData = null;
+        this._dragDropService.onDragSuccessCallback = null;
+        //
+        this.onDragEndCallback.emit(this._dragDropService.dragData);
+    };
+    SortableComponent.prototype._onDragEnterCallback = function (event) {
+        if (this._sortableDataService.isDragged) {
+            this._sortableDataService.markSortable(this._elem);
+            if ((this.index !== this._sortableDataService.index) ||
+                (this._sortableDataService.sortableContainer.sortableData !== this._sortableContainer.sortableData)) {
+                // console.log('Component._onDragEnterCallback. drag node [' + this.index + '] over node [' + this._sortableDataService.index + ']');
+                // Get item
+                var item = this._sortableDataService.sortableContainer.sortableData[this._sortableDataService.index];
+                // Remove item from previouse list
+                this._sortableDataService.sortableContainer.sortableData.splice(this._sortableDataService.index, 1);
+                if (this._sortableDataService.sortableContainer.sortableData.length === 0) {
+                    this._sortableDataService.sortableContainer.dropEnabled = true;
+                }
+                // Add item to new list
+                this._sortableContainer.sortableData.splice(this.index, 0, item);
+                if (this._sortableContainer.dropEnabled) {
+                    this._sortableContainer.dropEnabled = false;
+                }
+                this._sortableDataService.sortableContainer = this._sortableContainer;
+                this._sortableDataService.index = this.index;
+            }
+        }
+    };
+    SortableComponent.prototype._onDropCallback = function (event) {
+        if (this._sortableDataService.isDragged) {
+            // console.log('onDropCallback.onDropSuccessCallback.dragData', this._dragDropService.dragData);
+            this.onDropSuccessCallback.emit(this._dragDropService.dragData);
+            if (this._dragDropService.onDragSuccessCallback) {
+                // console.log('onDropCallback.onDragSuccessCallback.dragData', this._dragDropService.dragData);
+                this._dragDropService.onDragSuccessCallback.emit(this._dragDropService.dragData);
+            }
+            // Refresh changes in properties of container component
+            this._sortableContainer.detectChanges();
+        }
+    };
+    return SortableComponent;
+}(AbstractComponent));
+SortableComponent.decorators = [
+    { type: Directive, args: [{ selector: '[dnd-sortable]' },] },
+];
+/** @nocollapse */
+SortableComponent.ctorParameters = function () { return [
+    { type: ElementRef, },
+    { type: DragDropService, },
+    { type: DragDropConfig, },
+    { type: SortableContainer, },
+    { type: DragDropSortableService, },
+    { type: ChangeDetectorRef, },
+]; };
+SortableComponent.propDecorators = {
+    'index': [{ type: Input, args: ['sortableIndex',] },],
+    'draggable': [{ type: Input, args: ["dragEnabled",] },],
+    'droppable': [{ type: Input, args: ["dropEnabled",] },],
+    'dragData': [{ type: Input },],
+    'effectallowed': [{ type: Input, args: ["effectAllowed",] },],
+    'effectcursor': [{ type: Input, args: ["effectCursor",] },],
+    'onDragSuccessCallback': [{ type: Output, args: ["onDragSuccess",] },],
+    'onDragStartCallback': [{ type: Output, args: ["onDragStart",] },],
+    'onDragOverCallback': [{ type: Output, args: ["onDragOver",] },],
+    'onDragEndCallback': [{ type: Output, args: ["onDragEnd",] },],
+    'onDropSuccessCallback': [{ type: Output, args: ["onDropSuccess",] },],
+};
+var SortableHandleComponent = (function (_super) {
+    __extends$3(SortableHandleComponent, _super);
+    function SortableHandleComponent(elemRef, dragDropService, config, _Component, cdr) {
+        return _super.call(this, elemRef, dragDropService, config, _Component, cdr) || this;
+    }
+    return SortableHandleComponent;
+}(AbstractHandleComponent));
+SortableHandleComponent.decorators = [
+    { type: Directive, args: [{ selector: '[dnd-sortable-handle]' },] },
+];
+/** @nocollapse */
+SortableHandleComponent.ctorParameters = function () { return [
+    { type: ElementRef, },
+    { type: DragDropService, },
+    { type: DragDropConfig, },
+    { type: SortableComponent, },
+    { type: ChangeDetectorRef, },
+]; };
+
+// Copyright (C) 2016 Sergey Akopkokhyants
+var providers = [
+    DragDropConfig,
+    { provide: DragDropService, useFactory: dragDropServiceFactory },
+    { provide: DragDropSortableService, useFactory: dragDropSortableServiceFactory, deps: [DragDropConfig] }
+];
+var DndModule = (function () {
+    function DndModule() {
+    }
+    DndModule.forRoot = function () {
+        return {
+            ngModule: DndModule,
+            providers: providers
+        };
+    };
+    return DndModule;
+}());
+DndModule.decorators = [
+    { type: NgModule, args: [{
+                declarations: [DraggableComponent, DraggableHandleComponent, DroppableComponent, SortableContainer, SortableComponent, SortableHandleComponent],
+                exports: [DraggableComponent, DraggableHandleComponent, DroppableComponent, SortableContainer, SortableComponent, SortableHandleComponent],
+            },] },
+];
+/** @nocollapse */
+DndModule.ctorParameters = function () { return []; };
+
+var InputEditorComponent = (function () {
+    function InputEditorComponent(jsf, element, componentFactory, viewContainerRef, changeDetector, service, config) {
+        this.jsf = jsf;
+        this.element = element;
+        this.componentFactory = componentFactory;
+        this.viewContainerRef = viewContainerRef;
+        this.changeDetector = changeDetector;
+        this.service = service;
+        this.config = config;
+        this.controlDisabled = false;
+        this.boundControl = false;
+        this.autoCompleteList = [];
+    }
+    InputEditorComponent.prototype.ngOnInit = function () {
+        this.options = this.layoutNode.options || {};
+        this.jsf.initializeControl(this);
+    };
+    InputEditorComponent.prototype.getId = function () {
+        return 'control' + this.layoutNode.id;
+    };
+    InputEditorComponent.prototype.updateValue = function (event) {
+        this.jsf.updateValue(this, event.target.value);
+    };
+    InputEditorComponent.decorators = [
+        { type: Component, args: [{
+                    selector: 'input-widget',
+                    template: "\n    <div\n     [class]=\"options?.htmlClass || ''\">\n      <label *ngIf=\"options?.title\"\n        [attr.for]=\"'control' + layoutNode?._id\"\n        [class]=\"options?.labelHtmlClass || ''\"\n        [style.display]=\"options?.notitle ? 'none' : ''\"\n        [innerHTML]=\"options?.title\"></label>\n      <input *ngIf=\"boundControl\"\n        [formControl]=\"formControl\"\n        [attr.aria-describedby]=\"'control' + layoutNode?._id + 'Status'\"\n        [attr.list]=\"'control' + layoutNode?._id + 'Autocomplete'\"\n        [attr.maxlength]=\"options?.maxLength\"\n        [attr.minlength]=\"options?.minLength\"\n        [attr.pattern]=\"options?.pattern\"\n        [attr.placeholder]=\"options?.placeholder\"\n        [attr.required]=\"options?.required\"\n        [class]=\"options?.fieldHtmlClass || ''\"\n        [id]=\"'control' + layoutNode?._id\"\n        [name]=\"controlName\"\n        [readonly]=\"options?.readonly ? 'readonly' : null\"\n        [type]=\"layoutNode?.type\">\n      <input *ngIf=\"!boundControl\"\n        [attr.aria-describedby]=\"'control' + layoutNode?._id + 'Status'\"\n        [attr.list]=\"'control' + layoutNode?._id + 'Autocomplete'\"\n        [attr.maxlength]=\"options?.maxLength\"\n        [attr.minlength]=\"options?.minLength\"\n        [attr.pattern]=\"options?.pattern\"\n        [attr.placeholder]=\"options?.placeholder\"\n        [attr.required]=\"options?.required\"\n        [class]=\"options?.fieldHtmlClass || ''\"\n        [disabled]=\"controlDisabled\"\n        [id]=\"'control' + layoutNode?._id\"\n        [name]=\"controlName\"\n        [readonly]=\"options?.readonly ? 'readonly' : null\"\n        [type]=\"layoutNode?.type\"\n        [value]=\"controlValue\"\n        (input)=\"updateValue($event)\">\n        <datalist *ngIf=\"options?.typeahead?.source\"\n          [id]=\"'control' + layoutNode?._id + 'Autocomplete'\">\n          <option *ngFor=\"let word of options?.typeahead?.source\" [value]=\"word\">\n        </datalist>\n    </div>"
+                },] },
+    ];
+    InputEditorComponent.ctorParameters = function () { return [
+        { type: JsonSchemaFormService, },
+        { type: ElementRef, },
+        { type: ComponentFactoryResolver, },
+        { type: ViewContainerRef, },
+        { type: ChangeDetectorRef, },
+        { type: DragDropService, },
+        { type: DragDropConfig, },
+    ]; };
+    InputEditorComponent.propDecorators = {
+        "layoutNode": [{ type: Input },],
+        "layoutIndex": [{ type: Input },],
+        "dataIndex": [{ type: Input },],
+    };
+    return InputEditorComponent;
+}());
+
+var MessageEditorComponent = (function () {
+    function MessageEditorComponent(jsf) {
+        this.jsf = jsf;
+        this.message = null;
+    }
+    MessageEditorComponent.prototype.ngOnInit = function () {
+        this.options = this.layoutNode.options || {};
+        this.message = this.options.help || this.options.helpvalue ||
+            this.options.msg || this.options.message;
+    };
+    MessageEditorComponent.decorators = [
+        { type: Component, args: [{
+                    selector: 'message-widget',
+                    template: "\n    <span *ngIf=\"message\"\n      [class]=\"options?.labelHtmlClass || ''\"\n      [innerHTML]=\"message\"></span>",
+                },] },
+    ];
+    MessageEditorComponent.ctorParameters = function () { return [
+        { type: JsonSchemaFormService, },
+    ]; };
+    MessageEditorComponent.propDecorators = {
+        "layoutNode": [{ type: Input },],
+        "layoutIndex": [{ type: Input },],
+        "dataIndex": [{ type: Input },],
+    };
+    return MessageEditorComponent;
+}());
+
+var NoneEditorComponent = (function () {
+    function NoneEditorComponent() {
+    }
+    NoneEditorComponent.decorators = [
+        { type: Component, args: [{
+                    selector: 'none-widget',
+                    template: "",
+                },] },
+    ];
+    NoneEditorComponent.propDecorators = {
+        "layoutNode": [{ type: Input },],
+        "layoutIndex": [{ type: Input },],
+        "dataIndex": [{ type: Input },],
+    };
+    return NoneEditorComponent;
+}());
+
+var NumberEditorComponent = (function () {
+    function NumberEditorComponent(jsf) {
+        this.jsf = jsf;
+        this.controlDisabled = false;
+        this.boundControl = false;
+        this.allowNegative = true;
+        this.allowDecimal = true;
+        this.allowExponents = false;
+        this.lastValidNumber = '';
+    }
+    NumberEditorComponent.prototype.ngOnInit = function () {
+        this.options = this.layoutNode.options || {};
+        this.jsf.initializeControl(this);
+        if (this.layoutNode.dataType === 'integer') {
+            this.allowDecimal = false;
+        }
+    };
+    NumberEditorComponent.prototype.updateValue = function (event) {
+        this.jsf.updateValue(this, event.target.value);
+    };
+    NumberEditorComponent.decorators = [
+        { type: Component, args: [{
+                    selector: 'number-widget',
+                    template: "\n    <div [class]=\"options?.htmlClass || ''\">\n      <label *ngIf=\"options?.title\"\n        [attr.for]=\"'control' + layoutNode?._id\"\n        [class]=\"options?.labelHtmlClass || ''\"\n        [style.display]=\"options?.notitle ? 'none' : ''\"\n        [innerHTML]=\"options?.title\"></label>\n      <input *ngIf=\"boundControl\"\n        [formControl]=\"formControl\"\n        [attr.aria-describedby]=\"'control' + layoutNode?._id + 'Status'\"\n        [attr.max]=\"options?.maximum\"\n        [attr.min]=\"options?.minimum\"\n        [attr.placeholder]=\"options?.placeholder\"\n        [attr.required]=\"options?.required\"\n        [attr.readonly]=\"options?.readonly ? 'readonly' : null\"\n        [attr.step]=\"options?.multipleOf || options?.step || 'any'\"\n        [class]=\"options?.fieldHtmlClass || ''\"\n        [id]=\"'control' + layoutNode?._id\"\n        [name]=\"controlName\"\n        [readonly]=\"options?.readonly ? 'readonly' : null\"\n        [title]=\"lastValidNumber\"\n        [type]=\"layoutNode?.type === 'range' ? 'range' : 'number'\">\n      <input *ngIf=\"!boundControl\"\n        [attr.aria-describedby]=\"'control' + layoutNode?._id + 'Status'\"\n        [attr.max]=\"options?.maximum\"\n        [attr.min]=\"options?.minimum\"\n        [attr.placeholder]=\"options?.placeholder\"\n        [attr.required]=\"options?.required\"\n        [attr.readonly]=\"options?.readonly ? 'readonly' : null\"\n        [attr.step]=\"options?.multipleOf || options?.step || 'any'\"\n        [class]=\"options?.fieldHtmlClass || ''\"\n        [disabled]=\"controlDisabled\"\n        [id]=\"'control' + layoutNode?._id\"\n        [name]=\"controlName\"\n        [readonly]=\"options?.readonly ? 'readonly' : null\"\n        [title]=\"lastValidNumber\"\n        [type]=\"layoutNode?.type === 'range' ? 'range' : 'number'\"\n        [value]=\"controlValue\"\n        (input)=\"updateValue($event)\">\n      <span *ngIf=\"layoutNode?.type === 'range'\" [innerHTML]=\"controlValue\"></span>\n    </div>",
+                },] },
+    ];
+    NumberEditorComponent.ctorParameters = function () { return [
+        { type: JsonSchemaFormService, },
+    ]; };
+    NumberEditorComponent.propDecorators = {
+        "layoutNode": [{ type: Input },],
+        "layoutIndex": [{ type: Input },],
+        "dataIndex": [{ type: Input },],
+    };
+    return NumberEditorComponent;
+}());
+
+var RadiosEditorComponent = (function () {
+    function RadiosEditorComponent(jsf) {
+        this.jsf = jsf;
+        this.controlDisabled = false;
+        this.boundControl = false;
+        this.layoutOrientation = 'vertical';
+        this.radiosList = [];
+    }
+    RadiosEditorComponent.prototype.ngOnInit = function () {
+        this.options = this.layoutNode.options || {};
+        if (this.layoutNode.type === 'radios-inline' ||
+            this.layoutNode.type === 'radiobuttons') {
+            this.layoutOrientation = 'horizontal';
+        }
+        this.radiosList = buildTitleMap(this.options.titleMap || this.options.enumNames, this.options.enum, true);
+        this.jsf.initializeControl(this);
+    };
+    RadiosEditorComponent.prototype.updateValue = function (event) {
+        this.jsf.updateValue(this, event.target.value);
+    };
+    RadiosEditorComponent.decorators = [
+        { type: Component, args: [{
+                    selector: 'radios-widget',
+                    template: "\n    <label *ngIf=\"options?.title\"\n      [attr.for]=\"'control' + layoutNode?._id\"\n      [class]=\"options?.labelHtmlClass || ''\"\n      [style.display]=\"options?.notitle ? 'none' : ''\"\n      [innerHTML]=\"options?.title\"></label>\n\n    <!-- 'horizontal' = radios-inline or radiobuttons -->\n    <div *ngIf=\"layoutOrientation === 'horizontal'\"\n      [class]=\"options?.htmlClass || ''\">\n      <label *ngFor=\"let radioItem of radiosList\"\n        [attr.for]=\"'control' + layoutNode?._id + '/' + radioItem?.value\"\n        [class]=\"(options?.itemLabelHtmlClass || '') +\n          ((controlValue + '' === radioItem?.value + '') ?\n          (' ' + (options?.activeClass || '') + ' ' + (options?.style?.selected || '')) :\n          (' ' + (options?.style?.unselected || '')))\">\n        <input type=\"radio\"\n          [attr.aria-describedby]=\"'control' + layoutNode?._id + 'Status'\"\n          [attr.readonly]=\"options?.readonly ? 'readonly' : null\"\n          [attr.required]=\"options?.required\"\n          [checked]=\"radioItem?.value === controlValue\"\n          [class]=\"options?.fieldHtmlClass || ''\"\n          [disabled]=\"controlDisabled\"\n          [id]=\"'control' + layoutNode?._id + '/' + radioItem?.value\"\n          [name]=\"controlName\"\n          [value]=\"radioItem?.value\"\n          (change)=\"updateValue($event)\">\n        <span [innerHTML]=\"radioItem?.name\"></span>\n      </label>\n    </div>\n\n    <!-- 'vertical' = regular radios -->\n    <div *ngIf=\"layoutOrientation !== 'horizontal'\">\n      <div *ngFor=\"let radioItem of radiosList\"\n        [class]=\"options?.htmlClass || ''\">\n        <label\n          [attr.for]=\"'control' + layoutNode?._id + '/' + radioItem?.value\"\n          [class]=\"(options?.itemLabelHtmlClass || '') +\n            ((controlValue + '' === radioItem?.value + '') ?\n            (' ' + (options?.activeClass || '') + ' ' + (options?.style?.selected || '')) :\n            (' ' + (options?.style?.unselected || '')))\">\n          <input type=\"radio\"\n            [attr.aria-describedby]=\"'control' + layoutNode?._id + 'Status'\"\n            [attr.readonly]=\"options?.readonly ? 'readonly' : null\"\n            [attr.required]=\"options?.required\"\n            [checked]=\"radioItem?.value === controlValue\"\n            [class]=\"options?.fieldHtmlClass || ''\"\n            [disabled]=\"controlDisabled\"\n            [id]=\"'control' + layoutNode?._id + '/' + radioItem?.value\"\n            [name]=\"controlName\"\n            [value]=\"radioItem?.value\"\n            (change)=\"updateValue($event)\">\n          <span [innerHTML]=\"radioItem?.name\"></span>\n        </label>\n      </div>\n    </div>",
+                },] },
+    ];
+    RadiosEditorComponent.ctorParameters = function () { return [
+        { type: JsonSchemaFormService, },
+    ]; };
+    RadiosEditorComponent.propDecorators = {
+        "layoutNode": [{ type: Input },],
+        "layoutIndex": [{ type: Input },],
+        "dataIndex": [{ type: Input },],
+    };
+    return RadiosEditorComponent;
+}());
+
+var RootEditorComponent = (function () {
+    function RootEditorComponent(jsf) {
+        this.jsf = jsf;
+        this.isFlexItem = false;
+        this.onDrop = new EventEmitter();
+    }
+    RootEditorComponent.prototype.backToMain = function (data) {
+        console.log(data);
+        this.onDrop.emit(data);
+    };
+    RootEditorComponent.prototype.isDraggable = function (node) {
+        return node.arrayItem && node.type !== '$ref' &&
+            node.arrayItemType === 'list' && this.isOrderable !== false;
+    };
+    RootEditorComponent.prototype.getFlexAttribute = function (node, attribute) {
+        var index = ['flex-grow', 'flex-shrink', 'flex-basis'].indexOf(attribute);
+        return ((node.options || {}).flex || '').split(/\s+/)[index] ||
+            (node.options || {})[attribute] || ['1', '1', 'auto'][index];
+    };
+    RootEditorComponent.prototype.showWidget = function (layoutNode) {
+        return this.jsf.evaluateCondition(layoutNode, this.dataIndex);
+    };
+    RootEditorComponent.decorators = [
+        { type: Component, args: [{
+                    selector: 'root-widget',
+                    template: "\n\n    <div *ngFor=\"let layoutItem of layout; let i = index\"  dnd-sortable-container [sortableData]=\"layout\"\n      [class.form-flex-item]=\"isFlexItem\"\n      [style.align-self]=\"(layoutItem.options || {})['align-self']\"\n      [style.flex-basis]=\"getFlexAttribute(layoutItem, 'flex-basis')\"\n      [style.flex-grow]=\"getFlexAttribute(layoutItem, 'flex-grow')\"\n      [style.flex-shrink]=\"getFlexAttribute(layoutItem, 'flex-shrink')\"\n      [style.order]=\"(layoutItem.options || {}).order\">\n      <div dnd-sortable [sortableIndex]=\"i\" [dragEnabled]=\"true\" (onDropSuccess)=\"backToMain($event)\"\n      [dragData]=\"layoutItem\"\n        [dataIndex]=\"layoutItem?.arrayItem ? (dataIndex || []).concat(i) : (dataIndex || [])\"\n        [layoutIndex]=\"(layoutIndex || []).concat(i)\"\n        [layoutNode]=\"layoutItem\"\n        [orderable]=\"isDraggable(layoutItem)\">\n        <select-framework-widget *ngIf=\"showWidget(layoutItem)\"\n          [dataIndex]=\"layoutItem?.arrayItem ? (dataIndex || []).concat(i) : (dataIndex || [])\"\n          [layoutIndex]=\"(layoutIndex || []).concat(i)\"\n          [layoutNode]=\"layoutItem\"></select-framework-widget>\n      </div>\n     </div>",
+                    styles: ["\n    [draggable=true] {\n      transition: all 150ms cubic-bezier(.4, 0, .2, 1);\n    }\n    [draggable=true]:hover {\n      cursor: move;\n      box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);\n      position: relative; z-index: 10;\n      margin-top: -1px;\n      margin-left: -1px;\n      margin-right: 1px;\n      margin-bottom: 1px;\n    }\n    [draggable=true].drag-target-top {\n      box-shadow: 0 -2px 0 #000;\n      position: relative; z-index: 20;\n    }\n    [draggable=true].drag-target-bottom {\n      box-shadow: 0 2px 0 #000;\n      position: relative; z-index: 20;\n    }\n  "],
+                },] },
+    ];
+    RootEditorComponent.ctorParameters = function () { return [
+        { type: JsonSchemaFormService, },
+    ]; };
+    RootEditorComponent.propDecorators = {
+        "dataIndex": [{ type: Input },],
+        "layoutIndex": [{ type: Input },],
+        "layout": [{ type: Input },],
+        "isOrderable": [{ type: Input },],
+        "isFlexItem": [{ type: Input },],
+        "onDrop": [{ type: Output },],
+    };
+    return RootEditorComponent;
+}());
+
+var SectionEditorComponent = (function () {
+    function SectionEditorComponent(jsf) {
+        this.jsf = jsf;
+        this.expanded = true;
+    }
+    Object.defineProperty(SectionEditorComponent.prototype, "sectionTitle", {
+        get: function () {
+            return this.options.notitle ? null : this.jsf.setItemTitle(this);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    SectionEditorComponent.prototype.ngOnInit = function () {
+        this.jsf.initializeControl(this);
+        this.options = this.layoutNode.options || {};
+        this.expanded = typeof this.options.expanded === 'boolean' ?
+            this.options.expanded : !this.options.expandable;
+        switch (this.layoutNode.type) {
+            case 'fieldset':
+            case 'array':
+            case 'tab':
+            case 'advancedfieldset':
+            case 'authfieldset':
+            case 'optionfieldset':
+            case 'selectfieldset':
+                this.containerType = 'fieldset';
+                break;
+            default:
+                this.containerType = 'div';
+                break;
+        }
+    };
+    SectionEditorComponent.prototype.toggleExpanded = function () {
+        if (this.options.expandable) {
+            this.expanded = !this.expanded;
+        }
+    };
+    SectionEditorComponent.prototype.getFlexAttribute = function (attribute) {
+        var flexActive = this.layoutNode.type === 'flex' ||
+            !!this.options.displayFlex ||
+            this.options.display === 'flex';
+        if (attribute !== 'flex' && !flexActive) {
+            return null;
+        }
+        switch (attribute) {
+            case 'is-flex':
+                return flexActive;
+            case 'display':
+                return flexActive ? 'flex' : 'initial';
+            case 'flex-direction':
+            case 'flex-wrap':
+                var index = ['flex-direction', 'flex-wrap'].indexOf(attribute);
+                return (this.options['flex-flow'] || '').split(/\s+/)[index] ||
+                    this.options[attribute] || ['column', 'nowrap'][index];
+            case 'justify-content':
+            case 'align-items':
+            case 'align-content':
+                return this.options[attribute];
+        }
+    };
+    SectionEditorComponent.decorators = [
+        { type: Component, args: [{
+                    selector: 'section-widget',
+                    template: "\n    <div *ngIf=\"containerType === 'div'\"\n      [class]=\"options?.htmlClass || ''\"\n      [class.expandable]=\"options?.expandable && !expanded\"\n      [class.expanded]=\"options?.expandable && expanded\">\n      <label *ngIf=\"sectionTitle\"\n        class=\"legend\"\n        [class]=\"options?.labelHtmlClass || ''\"\n        [innerHTML]=\"sectionTitle\"\n        (click)=\"toggleExpanded()\"></label>\n      <root-widget *ngIf=\"expanded\"\n        [dataIndex]=\"dataIndex\"\n        [layout]=\"layoutNode.items\"\n        [layoutIndex]=\"layoutIndex\"\n        [isFlexItem]=\"getFlexAttribute('is-flex')\"\n        [isOrderable]=\"options?.orderable\"\n        [class.form-flex-column]=\"getFlexAttribute('flex-direction') === 'column'\"\n        [class.form-flex-row]=\"getFlexAttribute('flex-direction') === 'row'\"\n        [style.align-content]=\"getFlexAttribute('align-content')\"\n        [style.align-items]=\"getFlexAttribute('align-items')\"\n        [style.display]=\"getFlexAttribute('display')\"\n        [style.flex-direction]=\"getFlexAttribute('flex-direction')\"\n        [style.flex-wrap]=\"getFlexAttribute('flex-wrap')\"\n        [style.justify-content]=\"getFlexAttribute('justify-content')\"></root-widget>\n    </div>\n    <fieldset *ngIf=\"containerType === 'fieldset'\"\n      [class]=\"options?.htmlClass || ''\"\n      [class.expandable]=\"options?.expandable && !expanded\"\n      [class.expanded]=\"options?.expandable && expanded\"\n      [disabled]=\"options?.readonly\">\n      <legend *ngIf=\"sectionTitle\"\n        class=\"legend\"\n        [class]=\"options?.labelHtmlClass || ''\"\n        [innerHTML]=\"sectionTitle\"\n        (click)=\"toggleExpanded()\"></legend>\n      <div *ngIf=\"options?.messageLocation !== 'bottom'\">\n        <p *ngIf=\"options?.description\"\n        class=\"help-block\"\n        [class]=\"options?.labelHelpBlockClass || ''\"\n        [innerHTML]=\"options?.description\"></p>\n      </div>\n      <root-widget *ngIf=\"expanded\"\n        [dataIndex]=\"dataIndex\"\n        [layout]=\"layoutNode.items\"\n        [layoutIndex]=\"layoutIndex\"\n        [isFlexItem]=\"getFlexAttribute('is-flex')\"\n        [isOrderable]=\"options?.orderable\"\n        [class.form-flex-column]=\"getFlexAttribute('flex-direction') === 'column'\"\n        [class.form-flex-row]=\"getFlexAttribute('flex-direction') === 'row'\"\n        [style.align-content]=\"getFlexAttribute('align-content')\"\n        [style.align-items]=\"getFlexAttribute('align-items')\"\n        [style.display]=\"getFlexAttribute('display')\"\n        [style.flex-direction]=\"getFlexAttribute('flex-direction')\"\n        [style.flex-wrap]=\"getFlexAttribute('flex-wrap')\"\n        [style.justify-content]=\"getFlexAttribute('justify-content')\"></root-widget>\n      <div *ngIf=\"options?.messageLocation === 'bottom'\">\n        <p *ngIf=\"options?.description\"\n        class=\"help-block\"\n        [class]=\"options?.labelHelpBlockClass || ''\"\n        [innerHTML]=\"options?.description\"></p>\n      </div>\n    </fieldset>",
+                    styles: ["\n    .legend { font-weight: bold; }\n    .expandable > legend:before, .expandable > label:before  { content: '\u25B6'; padding-right: .3em; }\n    .expanded > legend:before, .expanded > label:before  { content: '\u25BC'; padding-right: .2em; }\n  "],
+                },] },
+    ];
+    SectionEditorComponent.ctorParameters = function () { return [
+        { type: JsonSchemaFormService, },
+    ]; };
+    SectionEditorComponent.propDecorators = {
+        "layoutNode": [{ type: Input },],
+        "layoutIndex": [{ type: Input },],
+        "dataIndex": [{ type: Input },],
+    };
+    return SectionEditorComponent;
+}());
+
+var SelectEditorComponent = (function () {
+    function SelectEditorComponent(jsf) {
+        this.jsf = jsf;
+        this.controlDisabled = false;
+        this.boundControl = false;
+        this.selectList = [];
+        this.isArray = isArray;
+    }
+    SelectEditorComponent.prototype.ngOnInit = function () {
+        this.options = this.layoutNode.options || {};
+        this.selectList = buildTitleMap(this.options.titleMap || this.options.enumNames, this.options.enum, !!this.options.required, !!this.options.flatList);
+        this.jsf.initializeControl(this);
+    };
+    SelectEditorComponent.prototype.updateValue = function (event) {
+        this.jsf.updateValue(this, event.target.value);
+    };
+    SelectEditorComponent.decorators = [
+        { type: Component, args: [{
+                    selector: 'select-widget',
+                    template: "\n    <div\n      [class]=\"options?.htmlClass || ''\">\n      <label *ngIf=\"options?.title\"\n        [attr.for]=\"'control' + layoutNode?._id\"\n        [class]=\"options?.labelHtmlClass || ''\"\n        [style.display]=\"options?.notitle ? 'none' : ''\"\n        [innerHTML]=\"options?.title\"></label>\n      <select *ngIf=\"boundControl\"\n        [formControl]=\"formControl\"\n        [attr.aria-describedby]=\"'control' + layoutNode?._id + 'Status'\"\n        [attr.readonly]=\"options?.readonly ? 'readonly' : null\"\n        [attr.required]=\"options?.required\"\n        [class]=\"options?.fieldHtmlClass || ''\"\n        [id]=\"'control' + layoutNode?._id\"\n        [name]=\"controlName\">\n        <ng-template ngFor let-selectItem [ngForOf]=\"selectList\">\n          <option *ngIf=\"!isArray(selectItem?.items)\"\n            [value]=\"selectItem?.value\">\n            <span [innerHTML]=\"selectItem?.name\"></span>\n          </option>\n          <optgroup *ngIf=\"isArray(selectItem?.items)\"\n            [label]=\"selectItem?.group\">\n            <option *ngFor=\"let subItem of selectItem.items\"\n              [value]=\"subItem?.value\">\n              <span [innerHTML]=\"subItem?.name\"></span>\n            </option>\n          </optgroup>\n        </ng-template>\n      </select>\n      <select *ngIf=\"!boundControl\"\n        [attr.aria-describedby]=\"'control' + layoutNode?._id + 'Status'\"\n        [attr.readonly]=\"options?.readonly ? 'readonly' : null\"\n        [attr.required]=\"options?.required\"\n        [class]=\"options?.fieldHtmlClass || ''\"\n        [disabled]=\"controlDisabled\"\n        [id]=\"'control' + layoutNode?._id\"\n        [name]=\"controlName\"\n        (change)=\"updateValue($event)\">\n        <ng-template ngFor let-selectItem [ngForOf]=\"selectList\">\n          <option *ngIf=\"!isArray(selectItem?.items)\"\n            [selected]=\"selectItem?.value === controlValue\"\n            [value]=\"selectItem?.value\">\n            <span [innerHTML]=\"selectItem?.name\"></span>\n          </option>\n          <optgroup *ngIf=\"isArray(selectItem?.items)\"\n            [label]=\"selectItem?.group\">\n            <option *ngFor=\"let subItem of selectItem.items\"\n              [attr.selected]=\"subItem?.value === controlValue\"\n              [value]=\"subItem?.value\">\n              <span [innerHTML]=\"subItem?.name\"></span>\n            </option>\n          </optgroup>\n        </ng-template>\n      </select>\n    </div>",
+                },] },
+    ];
+    SelectEditorComponent.ctorParameters = function () { return [
+        { type: JsonSchemaFormService, },
+    ]; };
+    SelectEditorComponent.propDecorators = {
+        "layoutNode": [{ type: Input },],
+        "layoutIndex": [{ type: Input },],
+        "dataIndex": [{ type: Input },],
+    };
+    return SelectEditorComponent;
+}());
+
+var SelectFrameworkEditorComponent = (function () {
+    function SelectFrameworkEditorComponent(componentFactory, jsf) {
+        this.componentFactory = componentFactory;
+        this.jsf = jsf;
+        this.newComponent = null;
+    }
+    SelectFrameworkEditorComponent.prototype.ngOnInit = function () {
+        this.updateComponent();
+    };
+    SelectFrameworkEditorComponent.prototype.ngOnChanges = function () {
+        this.updateComponent();
+    };
+    SelectFrameworkEditorComponent.prototype.updateComponent = function () {
+        if (!this.newComponent && this.jsf.framework) {
+            this.newComponent = this.widgetContainer.createComponent(this.componentFactory.resolveComponentFactory(this.jsf.framework));
+        }
+        if (this.newComponent) {
+            for (var _i = 0, _a = ['layoutNode', 'layoutIndex', 'dataIndex']; _i < _a.length; _i++) {
+                var input = _a[_i];
+                this.newComponent.instance[input] = this[input];
+            }
+        }
+    };
+    SelectFrameworkEditorComponent.decorators = [
+        { type: Component, args: [{
+                    selector: 'select-framework-widget',
+                    template: "<div #widgetContainer></div>",
+                },] },
+    ];
+    SelectFrameworkEditorComponent.ctorParameters = function () { return [
+        { type: ComponentFactoryResolver, },
+        { type: JsonSchemaFormService, },
+    ]; };
+    SelectFrameworkEditorComponent.propDecorators = {
+        "layoutNode": [{ type: Input },],
+        "layoutIndex": [{ type: Input },],
+        "dataIndex": [{ type: Input },],
+        "widgetContainer": [{ type: ViewChild, args: ['widgetContainer', { read: ViewContainerRef },] },],
+    };
+    return SelectFrameworkEditorComponent;
+}());
+
+var SelectWidgetEditorComponent = (function () {
+    function SelectWidgetEditorComponent(componentFactory, jsf) {
+        this.componentFactory = componentFactory;
+        this.jsf = jsf;
+        this.newComponent = null;
+    }
+    SelectWidgetEditorComponent.prototype.ngOnInit = function () {
+        this.updateComponent();
+    };
+    SelectWidgetEditorComponent.prototype.ngOnChanges = function () {
+        this.updateComponent();
+    };
+    SelectWidgetEditorComponent.prototype.updateComponent = function () {
+        if (!this.newComponent && (this.layoutNode || {}).widget) {
+            this.newComponent = this.widgetContainer.createComponent(this.componentFactory.resolveComponentFactory(this.layoutNode.widget));
+        }
+        if (this.newComponent) {
+            for (var _i = 0, _a = ['layoutNode', 'layoutIndex', 'dataIndex']; _i < _a.length; _i++) {
+                var input = _a[_i];
+                this.newComponent.instance[input] = this[input];
+            }
+        }
+    };
+    SelectWidgetEditorComponent.decorators = [
+        { type: Component, args: [{
+                    selector: 'select-widget-widget',
+                    template: "<div #widgetContainer></div>",
+                },] },
+    ];
+    SelectWidgetEditorComponent.ctorParameters = function () { return [
+        { type: ComponentFactoryResolver, },
+        { type: JsonSchemaFormService, },
+    ]; };
+    SelectWidgetEditorComponent.propDecorators = {
+        "layoutNode": [{ type: Input },],
+        "layoutIndex": [{ type: Input },],
+        "dataIndex": [{ type: Input },],
+        "widgetContainer": [{ type: ViewChild, args: ['widgetContainer', { read: ViewContainerRef },] },],
+    };
+    return SelectWidgetEditorComponent;
+}());
+
+var SubmitEditorComponent = (function () {
+    function SubmitEditorComponent(jsf) {
+        this.jsf = jsf;
+        this.controlDisabled = false;
+        this.boundControl = false;
+    }
+    SubmitEditorComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.options = this.layoutNode.options || {};
+        this.jsf.initializeControl(this);
+        if (hasOwn(this.options, 'disabled')) {
+            this.controlDisabled = this.options.disabled;
+        }
+        else if (this.jsf.formOptions.disableInvalidSubmit) {
+            this.controlDisabled = !this.jsf.isValid;
+            this.jsf.isValidChanges.subscribe(function (isValid) { return _this.controlDisabled = !isValid; });
+        }
+        if (this.controlValue === null || this.controlValue === undefined) {
+            this.controlValue = this.options.title;
+        }
+    };
+    SubmitEditorComponent.prototype.updateValue = function (event) {
+        if (typeof this.options.onClick === 'function') {
+            this.options.onClick(event);
+        }
+        else {
+            this.jsf.updateValue(this, event.target.value);
+        }
+    };
+    SubmitEditorComponent.decorators = [
+        { type: Component, args: [{
+                    selector: 'submit-widget',
+                    template: "\n    <div\n      [class]=\"options?.htmlClass || ''\">\n      <input\n        [attr.aria-describedby]=\"'control' + layoutNode?._id + 'Status'\"\n        [attr.readonly]=\"options?.readonly ? 'readonly' : null\"\n        [attr.required]=\"options?.required\"\n        [class]=\"options?.fieldHtmlClass || ''\"\n        [disabled]=\"controlDisabled\"\n        [id]=\"'control' + layoutNode?._id\"\n        [name]=\"controlName\"\n        [type]=\"layoutNode?.type\"\n        [value]=\"controlValue\"\n        (click)=\"updateValue($event)\">\n    </div>",
+                },] },
+    ];
+    SubmitEditorComponent.ctorParameters = function () { return [
+        { type: JsonSchemaFormService, },
+    ]; };
+    SubmitEditorComponent.propDecorators = {
+        "layoutNode": [{ type: Input },],
+        "layoutIndex": [{ type: Input },],
+        "dataIndex": [{ type: Input },],
+    };
+    return SubmitEditorComponent;
+}());
+
+var TabsEditorComponent = (function () {
+    function TabsEditorComponent(jsf) {
+        this.jsf = jsf;
+        this.selectedItem = 0;
+        this.showAddTab = true;
+    }
+    TabsEditorComponent.prototype.ngOnInit = function () {
+        this.options = this.layoutNode.options || {};
+        this.itemCount = this.layoutNode.items.length - 1;
+        this.updateControl();
+    };
+    TabsEditorComponent.prototype.select = function (index) {
+        if (this.layoutNode.items[index].type === '$ref') {
+            this.itemCount = this.layoutNode.items.length;
+            this.jsf.addItem({
+                layoutNode: this.layoutNode.items[index],
+                layoutIndex: this.layoutIndex.concat(index),
+                dataIndex: this.dataIndex.concat(index)
+            });
+            this.updateControl();
+        }
+        this.selectedItem = index;
+    };
+    TabsEditorComponent.prototype.updateControl = function () {
+        var lastItem = this.layoutNode.items[this.layoutNode.items.length - 1];
+        if (lastItem.type === '$ref' &&
+            this.itemCount >= (lastItem.options.maxItems || 1000)) {
+            this.showAddTab = false;
+        }
+    };
+    TabsEditorComponent.prototype.setTabTitle = function (item, index) {
+        return this.jsf.setArrayItemTitle(this, item, index);
+    };
+    TabsEditorComponent.decorators = [
+        { type: Component, args: [{
+                    selector: 'tabs-widget',
+                    template: "\n    <ul\n      [class]=\"options?.labelHtmlClass || ''\">\n      <li *ngFor=\"let item of layoutNode?.items; let i = index\"\n        [class]=\"(options?.itemLabelHtmlClass || '') + (selectedItem === i ?\n          (' ' + (options?.activeClass || '') + ' ' + (options?.style?.selected || '')) :\n          (' ' + options?.style?.unselected))\"\n        role=\"presentation\"\n        data-tabs>\n        <a *ngIf=\"showAddTab || item.type !== '$ref'\"\n           [class]=\"'nav-link' + (selectedItem === i ? (' ' + options?.activeClass + ' ' + options?.style?.selected) :\n            (' ' + options?.style?.unselected))\"\n          [innerHTML]=\"setTabTitle(item, i)\"\n          (click)=\"select(i)\"></a>\n      </li>\n    </ul>\n\n    <div *ngFor=\"let layoutItem of layoutNode?.items; let i = index\"\n      [class]=\"options?.htmlClass || ''\">\n\n      <select-framework-widget *ngIf=\"selectedItem === i\"\n        [class]=\"(options?.fieldHtmlClass || '') +\n          ' ' + (options?.activeClass || '') +\n          ' ' + (options?.style?.selected || '')\"\n        [dataIndex]=\"layoutNode?.dataType === 'array' ? (dataIndex || []).concat(i) : dataIndex\"\n        [layoutIndex]=\"(layoutIndex || []).concat(i)\"\n        [layoutNode]=\"layoutItem\"></select-framework-widget>\n\n    </div>",
+                    styles: [" a { cursor: pointer; } "],
+                },] },
+    ];
+    TabsEditorComponent.ctorParameters = function () { return [
+        { type: JsonSchemaFormService, },
+    ]; };
+    TabsEditorComponent.propDecorators = {
+        "layoutNode": [{ type: Input },],
+        "layoutIndex": [{ type: Input },],
+        "dataIndex": [{ type: Input },],
+    };
+    return TabsEditorComponent;
+}());
+
+var TemplateEditorComponent = (function () {
+    function TemplateEditorComponent(componentFactory, jsf) {
+        this.componentFactory = componentFactory;
+        this.jsf = jsf;
+        this.newComponent = null;
+    }
+    TemplateEditorComponent.prototype.ngOnInit = function () {
+        this.updateComponent();
+    };
+    TemplateEditorComponent.prototype.ngOnChanges = function () {
+        this.updateComponent();
+    };
+    TemplateEditorComponent.prototype.updateComponent = function () {
+        if (!this.newComponent && this.layoutNode.options.template) {
+            this.newComponent = this.widgetContainer.createComponent(this.componentFactory.resolveComponentFactory(this.layoutNode.options.template));
+        }
+        if (this.newComponent) {
+            for (var _i = 0, _a = ['layoutNode', 'layoutIndex', 'dataIndex']; _i < _a.length; _i++) {
+                var input = _a[_i];
+                this.newComponent.instance[input] = this[input];
+            }
+        }
+    };
+    TemplateEditorComponent.decorators = [
+        { type: Component, args: [{
+                    selector: 'template-widget',
+                    template: "<div #widgetContainer></div>",
+                },] },
+    ];
+    TemplateEditorComponent.ctorParameters = function () { return [
+        { type: ComponentFactoryResolver, },
+        { type: JsonSchemaFormService, },
+    ]; };
+    TemplateEditorComponent.propDecorators = {
+        "layoutNode": [{ type: Input },],
+        "layoutIndex": [{ type: Input },],
+        "dataIndex": [{ type: Input },],
+        "widgetContainer": [{ type: ViewChild, args: ['widgetContainer', { read: ViewContainerRef },] },],
+    };
+    return TemplateEditorComponent;
+}());
+
+var TextareaEditorComponent = (function () {
+    function TextareaEditorComponent(jsf) {
+        this.jsf = jsf;
+        this.controlDisabled = false;
+        this.boundControl = false;
+    }
+    TextareaEditorComponent.prototype.ngOnInit = function () {
+        this.options = this.layoutNode.options || {};
+        this.jsf.initializeControl(this);
+    };
+    TextareaEditorComponent.prototype.updateValue = function (event) {
+        this.jsf.updateValue(this, event.target.value);
+    };
+    TextareaEditorComponent.decorators = [
+        { type: Component, args: [{
+                    selector: 'textarea-widget',
+                    template: "\n    <div\n      [class]=\"options?.htmlClass || ''\">\n      <label *ngIf=\"options?.title\"\n        [attr.for]=\"'control' + layoutNode?._id\"\n        [class]=\"options?.labelHtmlClass || ''\"\n        [style.display]=\"options?.notitle ? 'none' : ''\"\n        [innerHTML]=\"options?.title\"></label>\n      <textarea *ngIf=\"boundControl\"\n        [formControl]=\"formControl\"\n        [attr.aria-describedby]=\"'control' + layoutNode?._id + 'Status'\"\n        [attr.maxlength]=\"options?.maxLength\"\n        [attr.minlength]=\"options?.minLength\"\n        [attr.pattern]=\"options?.pattern\"\n        [attr.placeholder]=\"options?.placeholder\"\n        [attr.readonly]=\"options?.readonly ? 'readonly' : null\"\n        [attr.required]=\"options?.required\"\n        [class]=\"options?.fieldHtmlClass || ''\"\n        [id]=\"'control' + layoutNode?._id\"\n        [name]=\"controlName\"></textarea>\n      <textarea *ngIf=\"!boundControl\"\n        [attr.aria-describedby]=\"'control' + layoutNode?._id + 'Status'\"\n        [attr.maxlength]=\"options?.maxLength\"\n        [attr.minlength]=\"options?.minLength\"\n        [attr.pattern]=\"options?.pattern\"\n        [attr.placeholder]=\"options?.placeholder\"\n        [attr.readonly]=\"options?.readonly ? 'readonly' : null\"\n        [attr.required]=\"options?.required\"\n        [class]=\"options?.fieldHtmlClass || ''\"\n        [disabled]=\"controlDisabled\"\n        [id]=\"'control' + layoutNode?._id\"\n        [name]=\"controlName\"\n        [value]=\"controlValue\"\n        (input)=\"updateValue($event)\">{{controlValue}}</textarea>\n    </div>",
+                },] },
+    ];
+    TextareaEditorComponent.ctorParameters = function () { return [
+        { type: JsonSchemaFormService, },
+    ]; };
+    TextareaEditorComponent.propDecorators = {
+        "layoutNode": [{ type: Input },],
+        "layoutIndex": [{ type: Input },],
+        "dataIndex": [{ type: Input },],
+    };
+    return TextareaEditorComponent;
+}());
+
+var WidgetEditorLibraryService = (function () {
+    function WidgetEditorLibraryService() {
+        this.defaultWidget = 'text';
+        this.widgetLibrary = {
+            'none': NoneEditorComponent,
+            'root': RootEditorComponent,
+            'select-framework': SelectFrameworkEditorComponent,
+            'select-widget': SelectWidgetEditorComponent,
+            '$ref': AddReferenceEditorComponent,
+            'email': 'text',
+            'integer': 'number',
+            'number': NumberEditorComponent,
+            'password': 'text',
+            'search': 'text',
+            'tel': 'text',
+            'text': InputEditorComponent,
+            'url': 'text',
+            'color': 'text',
+            'date': 'text',
+            'datetime': 'text',
+            'datetime-local': 'text',
+            'month': 'text',
+            'range': 'number',
+            'time': 'text',
+            'week': 'text',
+            'checkbox': CheckboxEditorComponent,
+            'file': FileEditorComponent,
+            'hidden': 'text',
+            'image': 'text',
+            'radio': 'radios',
+            'reset': 'submit',
+            'submit': SubmitEditorComponent,
+            'button': ButtonEditorComponent,
+            'select': SelectEditorComponent,
+            'textarea': TextareaEditorComponent,
+            'checkboxes': CheckboxesEditorComponent,
+            'checkboxes-inline': 'checkboxes',
+            'checkboxbuttons': 'checkboxes',
+            'radios': RadiosEditorComponent,
+            'radios-inline': 'radios',
+            'radiobuttons': 'radios',
+            'section': SectionEditorComponent,
+            'div': 'section',
+            'fieldset': 'section',
+            'flex': 'section',
+            'one-of': OneOfEditorComponent,
+            'array': 'section',
+            'tabarray': 'tabs',
+            'tab': 'section',
+            'tabs': TabsEditorComponent,
+            'message': MessageEditorComponent,
+            'help': 'message',
+            'msg': 'message',
+            'html': 'message',
+            'template': TemplateEditorComponent,
+            'advancedfieldset': 'section',
+            'authfieldset': 'section',
+            'optionfieldset': 'one-of',
+            'selectfieldset': 'one-of',
+            'conditional': 'section',
+            'actions': 'section',
+            'tagsinput': 'section',
+            'updown': 'number',
+            'date-time': 'datetime-local',
+            'alt-datetime': 'datetime-local',
+            'alt-date': 'date',
+            'wizard': 'section',
+            'textline': 'text',
+        };
+        this.registeredWidgets = {};
+        this.frameworkWidgets = {};
+        this.activeWidgets = {};
+        this.setActiveWidgets();
+    }
+    WidgetEditorLibraryService.prototype.setActiveWidgets = function () {
+        this.activeWidgets = Object.assign({}, this.widgetLibrary, this.frameworkWidgets, this.registeredWidgets);
+        for (var _i = 0, _a = Object.keys(this.activeWidgets); _i < _a.length; _i++) {
+            var widgetName = _a[_i];
+            var widget = this.activeWidgets[widgetName];
+            if (typeof widget === 'string') {
+                var usedAliases = [];
+                while (typeof widget === 'string' && !usedAliases.includes(widget)) {
+                    usedAliases.push(widget);
+                    widget = this.activeWidgets[widget];
+                }
+                if (typeof widget !== 'string') {
+                    this.activeWidgets[widgetName] = widget;
+                }
+            }
+        }
+        return true;
+    };
+    WidgetEditorLibraryService.prototype.setDefaultWidget = function (type) {
+        if (!this.hasWidget(type)) {
+            return false;
+        }
+        this.defaultWidget = type;
+        return true;
+    };
+    WidgetEditorLibraryService.prototype.hasWidget = function (type, widgetSet) {
+        if (widgetSet === void 0) { widgetSet = 'activeWidgets'; }
+        if (!type || typeof type !== 'string') {
+            return false;
+        }
+        return hasOwn(this[widgetSet], type);
+    };
+    WidgetEditorLibraryService.prototype.hasDefaultWidget = function (type) {
+        return this.hasWidget(type, 'widgetLibrary');
+    };
+    WidgetEditorLibraryService.prototype.registerWidget = function (type, widget) {
+        if (!type || !widget || typeof type !== 'string') {
+            return false;
+        }
+        this.registeredWidgets[type] = widget;
+        return this.setActiveWidgets();
+    };
+    WidgetEditorLibraryService.prototype.unRegisterWidget = function (type) {
+        if (!hasOwn(this.registeredWidgets, type)) {
+            return false;
+        }
+        delete this.registeredWidgets[type];
+        return this.setActiveWidgets();
+    };
+    WidgetEditorLibraryService.prototype.unRegisterAllWidgets = function (unRegisterFrameworkWidgets) {
+        if (unRegisterFrameworkWidgets === void 0) { unRegisterFrameworkWidgets = true; }
+        this.registeredWidgets = {};
+        if (unRegisterFrameworkWidgets) {
+            this.frameworkWidgets = {};
+        }
+        return this.setActiveWidgets();
+    };
+    WidgetEditorLibraryService.prototype.registerFrameworkWidgets = function (widgets) {
+        if (widgets === null || typeof widgets !== 'object') {
+            widgets = {};
+        }
+        this.frameworkWidgets = widgets;
+        return this.setActiveWidgets();
+    };
+    WidgetEditorLibraryService.prototype.unRegisterFrameworkWidgets = function () {
+        if (Object.keys(this.frameworkWidgets).length) {
+            this.frameworkWidgets = {};
+            return this.setActiveWidgets();
+        }
+        return false;
+    };
+    WidgetEditorLibraryService.prototype.getWidget = function (type, widgetSet) {
+        if (widgetSet === void 0) { widgetSet = 'activeWidgets'; }
+        if (this.hasWidget(type, widgetSet)) {
+            return this[widgetSet][type];
+        }
+        else if (this.hasWidget(this.defaultWidget, widgetSet)) {
+            return this[widgetSet][this.defaultWidget];
+        }
+        else {
+            return null;
+        }
+    };
+    WidgetEditorLibraryService.prototype.getAllWidgets = function () {
+        return {
+            widgetLibrary: this.widgetLibrary,
+            registeredWidgets: this.registeredWidgets,
+            frameworkWidgets: this.frameworkWidgets,
+            activeWidgets: this.activeWidgets,
+        };
+    };
+    WidgetEditorLibraryService.decorators = [
+        { type: Injectable },
+    ];
+    WidgetEditorLibraryService.ctorParameters = function () { return []; };
+    return WidgetEditorLibraryService;
+}());
+
+var FrameworkEditorLibraryService = (function () {
+    function FrameworkEditorLibraryService(frameworks, widgetLibrary) {
+        var _this = this;
+        this.frameworks = frameworks;
+        this.widgetLibrary = widgetLibrary;
+        this.activeFramework = null;
+        this.loadExternalAssets = false;
+        this.frameworkLibrary = {};
+        this.frameworks.forEach(function (framework) {
+            return _this.frameworkLibrary[framework.name] = framework;
+        });
+        this.defaultFramework = this.frameworks[0].name;
+        this.setFramework(this.defaultFramework);
+    }
+    FrameworkEditorLibraryService.prototype.setLoadExternalAssets = function (loadExternalAssets) {
+        if (loadExternalAssets === void 0) { loadExternalAssets = true; }
+        this.loadExternalAssets = !!loadExternalAssets;
+    };
+    FrameworkEditorLibraryService.prototype.setFramework = function (framework, loadExternalAssets) {
+        if (framework === void 0) { framework = this.defaultFramework; }
+        if (loadExternalAssets === void 0) { loadExternalAssets = this.loadExternalAssets; }
+        this.activeFramework =
+            typeof framework === 'string' && this.hasFramework(framework) ?
+                this.frameworkLibrary[framework] :
+                typeof framework === 'object' && hasOwn(framework, 'framework') ?
+                    framework :
+                    this.frameworkLibrary[this.defaultFramework];
+        return this.registerFrameworkWidgets(this.activeFramework);
+    };
+    FrameworkEditorLibraryService.prototype.registerFrameworkWidgets = function (framework) {
+        return hasOwn(framework, 'widgets') ?
+            this.widgetLibrary.registerFrameworkWidgets(framework.widgets) :
+            this.widgetLibrary.unRegisterFrameworkWidgets();
+    };
+    FrameworkEditorLibraryService.prototype.hasFramework = function (type) {
+        return hasOwn(this.frameworkLibrary, type);
+    };
+    FrameworkEditorLibraryService.prototype.getFramework = function () {
+        if (!this.activeFramework) {
+            this.setFramework('default', true);
+        }
+        return this.activeFramework.framework;
+    };
+    FrameworkEditorLibraryService.prototype.getFrameworkWidgets = function () {
+        return this.activeFramework.widgets || {};
+    };
+    FrameworkEditorLibraryService.prototype.getFrameworkStylesheets = function (load) {
+        if (load === void 0) { load = this.loadExternalAssets; }
+        return (load && this.activeFramework.stylesheets) || [];
+    };
+    FrameworkEditorLibraryService.prototype.getFrameworkScripts = function (load) {
+        if (load === void 0) { load = this.loadExternalAssets; }
+        return (load && this.activeFramework.scripts) || [];
+    };
+    FrameworkEditorLibraryService.decorators = [
+        { type: Injectable },
+    ];
+    FrameworkEditorLibraryService.ctorParameters = function () { return [
+        { type: Array, decorators: [{ type: Inject, args: [Framework,] },] },
+        { type: WidgetEditorLibraryService, decorators: [{ type: Inject, args: [WidgetEditorLibraryService,] },] },
+    ]; };
+    return FrameworkEditorLibraryService;
+}());
+
+var JsonSchemaFormEditorComponent = (function () {
+    function JsonSchemaFormEditorComponent(changeDetector, frameworkLibrary, widgetEditorLibrary, jsf, sanitizer) {
+        this.changeDetector = changeDetector;
+        this.frameworkLibrary = frameworkLibrary;
+        this.widgetEditorLibrary = widgetEditorLibrary;
+        this.jsf = jsf;
+        this.sanitizer = sanitizer;
+        this.formValueSubscription = null;
+        this.formInitialized = false;
+        this.objectWrap = false;
+        this.previousInputs = {
+            schema: null, layout: null, data: null, options: null, framework: null,
+            widgets: null, form: null, model: null, JSONSchema: null, UISchema: null,
+            formData: null, loadExternalAssets: null, debug: null,
+        };
+        this.onChanges = new EventEmitter();
+        this.onSubmit = new EventEmitter();
+        this.isValid = new EventEmitter();
+        this.validationErrors = new EventEmitter();
+        this.formSchema = new EventEmitter();
+        this.formLayout = new EventEmitter();
+        this.dataChange = new EventEmitter();
+        this.modelChange = new EventEmitter();
+        this.formDataChange = new EventEmitter();
+        this.ngModelChange = new EventEmitter();
+    }
+    Object.defineProperty(JsonSchemaFormEditorComponent.prototype, "value", {
+        get: function () {
+            return this.objectWrap ? this.jsf.data['1'] : this.jsf.data;
+        },
+        set: function (value) {
+            this.setFormValues(value, false);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(JsonSchemaFormEditorComponent.prototype, "stylesheets", {
+        get: function () {
+            var stylesheets = this.frameworkLibrary.getFrameworkStylesheets();
+            var load = this.sanitizer.bypassSecurityTrustResourceUrl;
+            return stylesheets.map(function (stylesheet) { return load(stylesheet); });
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(JsonSchemaFormEditorComponent.prototype, "scripts", {
+        get: function () {
+            var scripts = this.frameworkLibrary.getFrameworkScripts();
+            var load = this.sanitizer.bypassSecurityTrustResourceUrl;
+            return scripts.map(function (script) { return load(script); });
+        },
+        enumerable: true,
+        configurable: true
+    });
+    JsonSchemaFormEditorComponent.prototype.ngOnInit = function () {
+        this.updateForm();
+    };
+    JsonSchemaFormEditorComponent.prototype.ngOnChanges = function (changes) {
+        var update = false;
+        Object.keys(changes).forEach(function (key) {
+            var change = changes[key];
+            if (!isEqual(change.currentValue, change.previousValue)) {
+                update = true;
+            }
+        });
+        if (update) {
+            this.updateForm();
+        }
+    };
+    JsonSchemaFormEditorComponent.prototype.retSchema = function ($event) {
+        console.log($event);
+        this.formLayout.emit(this.jsf.layout);
+    };
+    JsonSchemaFormEditorComponent.prototype.writeValue = function (value) {
+        this.setFormValues(value, false);
+        if (!this.formValuesInput) {
+            this.formValuesInput = 'ngModel';
+        }
+    };
+    JsonSchemaFormEditorComponent.prototype.registerOnChange = function (fn) {
+        this.onChange = fn;
+    };
+    JsonSchemaFormEditorComponent.prototype.registerOnTouched = function (fn) {
+        this.onTouched = fn;
+    };
+    JsonSchemaFormEditorComponent.prototype.setDisabledState = function (isDisabled) {
+        if (this.jsf.formOptions.formDisabled !== !!isDisabled) {
+            this.jsf.formOptions.formDisabled = !!isDisabled;
+            this.initializeForm();
+        }
+    };
+    JsonSchemaFormEditorComponent.prototype.updateForm = function () {
+        var _this = this;
+        if (!this.formInitialized || !this.formValuesInput ||
+            (this.language && this.language !== this.jsf.language)) {
+            this.initializeForm();
+        }
+        else {
+            if (this.language && this.language !== this.jsf.language) {
+                this.jsf.setLanguage(this.language);
+            }
+            var changedInput = Object.keys(this.previousInputs)
+                .filter(function (input) { return _this.previousInputs[input] !== _this[input]; });
+            var resetFirst = false;
+            if (isEmpty(this.jsf.formValues)) {
+                resetFirst = true;
+            }
+            if (changedInput.length === 1 && changedInput[0] === 'form' &&
+                this.formValuesInput.startsWith('form.')) {
+                changedInput = Object.keys(this.previousInputs.form || {})
+                    .filter(function (key) { return !isEqual(_this.previousInputs.form[key], _this.form[key]); })
+                    .map(function (key) { return "form." + key; });
+                resetFirst = false;
+            }
+            if (changedInput.length === 1 && changedInput[0] === this.formValuesInput) {
+                if (this.formValuesInput.indexOf('.') === -1) {
+                    this.setFormValues(this[this.formValuesInput], resetFirst);
+                }
+                else {
+                    var _a = this.formValuesInput.split('.'), input = _a[0], key = _a[1];
+                    this.setFormValues(this[input][key], resetFirst);
+                }
+            }
+            else if (changedInput.length) {
+                this.initializeForm();
+                if (this.onChange) {
+                    this.onChange(this.jsf.formValues);
+                }
+                if (this.onTouched) {
+                    this.onTouched(this.jsf.formValues);
+                }
+            }
+            Object.keys(this.previousInputs)
+                .filter(function (input) { return _this.previousInputs[input] !== _this[input]; })
+                .forEach(function (input) { return _this.previousInputs[input] = _this[input]; });
+        }
+    };
+    JsonSchemaFormEditorComponent.prototype.setFormValues = function (formValues, resetFirst) {
+        if (resetFirst === void 0) { resetFirst = false; }
+        if (formValues) {
+            var newFormValues = this.objectWrap ? formValues['1'] : formValues;
+            if (!this.jsf.formGroup) {
+                this.jsf.formValues = formValues;
+                this.activateForm();
+            }
+            else if (resetFirst) {
+                this.jsf.formGroup.reset();
+            }
+            if (this.jsf.formGroup) {
+                this.jsf.formGroup.patchValue(newFormValues);
+            }
+            if (this.onChange) {
+                this.onChange(newFormValues);
+            }
+            if (this.onTouched) {
+                this.onTouched(newFormValues);
+            }
+        }
+        else {
+            this.jsf.formGroup.reset();
+        }
+    };
+    JsonSchemaFormEditorComponent.prototype.submitForm = function () {
+        var validData = this.jsf.validData;
+        this.onSubmit.emit(this.objectWrap ? validData['1'] : validData);
+    };
+    JsonSchemaFormEditorComponent.prototype.initializeForm = function () {
+        if (this.schema || this.layout || this.data || this.form || this.model ||
+            this.JSONSchema || this.UISchema || this.formData || this.ngModel ||
+            this.jsf.data) {
+            this.jsf.resetAllValues();
+            this.initializeOptions();
+            this.initializeSchema();
+            this.initializeLayout();
+            this.initializeData();
+            this.activateForm();
+            if (this.debug || this.jsf.formOptions.debug) {
+                var vars = [];
+                this.debugOutput = vars.map(function (v) { return JSON.stringify(v, null, 2); }).join('\n');
+            }
+            this.formInitialized = true;
+        }
+    };
+    JsonSchemaFormEditorComponent.prototype.initializeOptions = function () {
+        if (this.language && this.language !== this.jsf.language) {
+            this.jsf.setLanguage(this.language);
+        }
+        this.jsf.setOptions({ debug: !!this.debug });
+        var loadExternalAssets = this.loadExternalAssets || false;
+        var framework = this.framework || 'default';
+        if (isObject(this.options)) {
+            this.jsf.setOptions(this.options);
+            loadExternalAssets = this.options.loadExternalAssets || loadExternalAssets;
+            framework = this.options.framework || framework;
+        }
+        if (isObject(this.form) && isObject(this.form.options)) {
+            this.jsf.setOptions(this.form.options);
+            loadExternalAssets = this.form.options.loadExternalAssets || loadExternalAssets;
+            framework = this.form.options.framework || framework;
+        }
+        if (isObject(this.widgets)) {
+            this.jsf.setOptions({ widgets: this.widgets });
+        }
+        this.frameworkLibrary.setLoadExternalAssets(loadExternalAssets);
+        this.frameworkLibrary.setFramework(framework);
+        this.jsf.framework = this.frameworkLibrary.getFramework();
+        if (isObject(this.jsf.formOptions.widgets)) {
+            for (var _i = 0, _a = Object.keys(this.jsf.formOptions.widgets); _i < _a.length; _i++) {
+                var widget = _a[_i];
+                this.widgetEditorLibrary.registerWidget(widget, this.jsf.formOptions.widgets[widget]);
+            }
+        }
+        if (isObject(this.form) && isObject(this.form.tpldata)) {
+            this.jsf.setTpldata(this.form.tpldata);
+        }
+    };
+    JsonSchemaFormEditorComponent.prototype.initializeSchema = function () {
+        var _this = this;
+        console.log('JsonSchemaFormEditorComponent.initializeSchema()', 'this.ngModel', this.ngModel, 'this.jsf.formValues', this.jsf.formValues, 'this.jsf.schema', this.jsf.schema, 'this.data', this.data, 'this.schema', this.schema, 'this.form', this.form);
+        if (isObject(this.schema)) {
+            this.jsf.AngularSchemaFormCompatibility = true;
+            this.jsf.schema = cloneDeep(this.schema);
+        }
+        else if (hasOwn(this.form, 'schema') && isObject(this.form.schema)) {
+            this.jsf.schema = cloneDeep(this.form.schema);
+        }
+        else if (isObject(this.JSONSchema)) {
+            this.jsf.ReactJsonSchemaFormCompatibility = true;
+            this.jsf.schema = cloneDeep(this.JSONSchema);
+        }
+        else if (hasOwn(this.form, 'JSONSchema') && isObject(this.form.JSONSchema)) {
+            this.jsf.ReactJsonSchemaFormCompatibility = true;
+            this.jsf.schema = cloneDeep(this.form.JSONSchema);
+        }
+        else if (hasOwn(this.form, 'properties') && isObject(this.form.properties)) {
+            this.jsf.schema = cloneDeep(this.form);
+        }
+        else if (isObject(this.form)) ;
+        else if (hasValue(this.ngModel)) {
+            console.log(' hasValue(ngModel)');
+            var schema_1 = {};
+            if (typeof this.ngModel === 'object') {
+                schema_1['type'] = 'object';
+            }
+            else if (isArray(this.ngModel)) {
+                schema_1['type'] = 'array';
+            }
+            schema_1['properties'] = {};
+            Object.keys(this.ngModel).forEach(function (key) {
+                schema_1['properties'][key] = {};
+                schema_1['properties'][key].type = (typeof _this.ngModel[key]);
+            });
+            this.jsf.schema = schema_1;
+        }
+        if (!isEmpty(this.jsf.schema)) {
+            if (inArray('object', this.jsf.schema.type)) {
+                this.jsf.schema.type = 'object';
+            }
+            if (hasOwn(this.jsf.schema, 'type') && this.jsf.schema.type !== 'object') {
+                this.jsf.schema = {
+                    'type': 'object',
+                    'properties': { 1: this.jsf.schema }
+                };
+                this.objectWrap = true;
+            }
+            else if (!hasOwn(this.jsf.schema, 'type')) {
+                if (isObject(this.jsf.schema.properties) ||
+                    isObject(this.jsf.schema.patternProperties) ||
+                    isObject(this.jsf.schema.additionalProperties)) {
+                    this.jsf.schema.type = 'object';
+                }
+                else {
+                    this.jsf.JsonFormCompatibility = true;
+                    this.jsf.schema = {
+                        'type': 'object',
+                        'properties': this.jsf.schema
+                    };
+                }
+            }
+            this.jsf.schema = convertSchemaToDraft6(this.jsf.schema);
+            this.jsf.compileAjvSchema();
+            this.jsf.schema = resolveSchemaReferences(this.jsf.schema, this.jsf.schemaRefLibrary, this.jsf.schemaRecursiveRefMap, this.jsf.dataRecursiveRefMap, this.jsf.arrayMap);
+            if (hasOwn(this.jsf.schemaRefLibrary, '')) {
+                this.jsf.hasRootReference = true;
+            }
+        }
+    };
+    JsonSchemaFormEditorComponent.prototype.initializeData = function () {
+        if (hasValue(this.data)) {
+            this.jsf.formValues = cloneDeep(this.data);
+            this.formValuesInput = 'data';
+        }
+        else if (hasValue(this.model)) {
+            this.jsf.AngularSchemaFormCompatibility = true;
+            this.jsf.formValues = cloneDeep(this.model);
+            this.formValuesInput = 'model';
+        }
+        else if (hasValue(this.ngModel)) {
+            this.jsf.AngularSchemaFormCompatibility = true;
+            this.jsf.formValues = cloneDeep(this.ngModel);
+            this.formValuesInput = 'ngModel';
+        }
+        else if (isObject(this.form) && hasValue(this.form.value)) {
+            this.jsf.JsonFormCompatibility = true;
+            this.jsf.formValues = cloneDeep(this.form.value);
+            this.formValuesInput = 'form.value';
+        }
+        else if (isObject(this.form) && hasValue(this.form.data)) {
+            this.jsf.formValues = cloneDeep(this.form.data);
+            this.formValuesInput = 'form.data';
+        }
+        else if (hasValue(this.formData)) {
+            this.jsf.ReactJsonSchemaFormCompatibility = true;
+            this.formValuesInput = 'formData';
+        }
+        else if (hasOwn(this.form, 'formData') && hasValue(this.form.formData)) {
+            this.jsf.ReactJsonSchemaFormCompatibility = true;
+            this.jsf.formValues = cloneDeep(this.form.formData);
+            this.formValuesInput = 'form.formData';
+        }
+        else {
+            this.formValuesInput = null;
+        }
+    };
+    JsonSchemaFormEditorComponent.prototype.initializeLayout = function () {
+        var _this = this;
+        var fixJsonFormOptions = function (layout) {
+            if (isObject(layout) || isArray(layout)) {
+                forEach(layout, function (value, key) {
+                    if (hasOwn(value, 'options') && isObject(value.options)) {
+                        value.titleMap = value.options;
+                        delete value.options;
+                    }
+                }, 'top-down');
+            }
+            return layout;
+        };
+        if (isArray(this.layout)) {
+            this.jsf.layout = cloneDeep(this.layout);
+        }
+        else if (isArray(this.form)) {
+            this.jsf.AngularSchemaFormCompatibility = true;
+            this.jsf.layout = cloneDeep(this.form);
+        }
+        else if (this.form && isArray(this.form.form)) {
+            this.jsf.JsonFormCompatibility = true;
+            this.jsf.layout = fixJsonFormOptions(cloneDeep(this.form.form));
+        }
+        else if (this.form && isArray(this.form.layout)) {
+            this.jsf.layout = cloneDeep(this.form.layout);
+        }
+        else {
+            this.jsf.layout = ['*'];
+        }
+        var alternateLayout = null;
+        if (isObject(this.UISchema)) {
+            this.jsf.ReactJsonSchemaFormCompatibility = true;
+            alternateLayout = cloneDeep(this.UISchema);
+        }
+        else if (hasOwn(this.form, 'UISchema')) {
+            this.jsf.ReactJsonSchemaFormCompatibility = true;
+            alternateLayout = cloneDeep(this.form.UISchema);
+        }
+        else if (hasOwn(this.form, 'uiSchema')) {
+            this.jsf.ReactJsonSchemaFormCompatibility = true;
+            alternateLayout = cloneDeep(this.form.uiSchema);
+        }
+        else if (hasOwn(this.form, 'customFormItems')) {
+            this.jsf.JsonFormCompatibility = true;
+            alternateLayout = fixJsonFormOptions(cloneDeep(this.form.customFormItems));
+        }
+        if (alternateLayout) {
+            JsonPointer.forEachDeep(alternateLayout, function (value, pointer) {
+                var schemaPointer = pointer
+                    .replace(/\//g, '/properties/')
+                    .replace(/\/properties\/items\/properties\//g, '/items/properties/')
+                    .replace(/\/properties\/titleMap\/properties\//g, '/titleMap/properties/');
+                if (hasValue(value) && hasValue(pointer)) {
+                    var key = JsonPointer.toKey(pointer);
+                    var groupPointer = (JsonPointer.parse(schemaPointer) || []).slice(0, -2);
+                    var itemPointer = void 0;
+                    if (key.toLowerCase() === 'ui:order') {
+                        itemPointer = groupPointer.concat(['ui:order']);
+                    }
+                    else {
+                        if (key.slice(0, 3).toLowerCase() === 'ui:') {
+                            key = key.slice(3);
+                        }
+                        itemPointer = groupPointer.concat(['x-schema-form', key]);
+                    }
+                    if (JsonPointer.has(_this.jsf.schema, groupPointer) &&
+                        !JsonPointer.has(_this.jsf.schema, itemPointer)) {
+                        JsonPointer.set(_this.jsf.schema, itemPointer, value);
+                    }
+                }
+            });
+        }
+    };
+    JsonSchemaFormEditorComponent.prototype.activateForm = function () {
+        var _this = this;
+        if (isEmpty(this.jsf.schema)) {
+            if (!isEmpty(this.jsf.formValues)) {
+                this.jsf.buildSchemaFromData();
+            }
+        }
+        if (!isEmpty(this.jsf.schema)) {
+            this.jsf.compileAjvSchema();
+            this.jsf.buildLayout(this.widgetEditorLibrary);
+            this.jsf.buildFormGroupTemplate(this.jsf.formValues);
+            this.jsf.buildFormGroup();
+        }
+        if (this.jsf.formGroup) {
+            if (!isEmpty(this.jsf.formValues) &&
+                this.jsf.formOptions.setSchemaDefaults !== true &&
+                this.jsf.formOptions.setLayoutDefaults !== true) {
+                this.setFormValues(this.jsf.formValues);
+            }
+            this.jsf.dataChanges.subscribe(function (data) {
+                _this.onChanges.emit(_this.objectWrap ? data['1'] : data);
+                if (_this.formValuesInput && _this.formValuesInput.indexOf('.') === -1) {
+                    _this[_this.formValuesInput + "Change"].emit(_this.objectWrap ? data['1'] : data);
+                }
+            });
+            this.jsf.formGroup.statusChanges.subscribe(function () { return _this.changeDetector.markForCheck(); });
+            this.jsf.isValidChanges.subscribe(function (isValid) { return _this.isValid.emit(isValid); });
+            this.jsf.validationErrorChanges.subscribe(function (err) { return _this.validationErrors.emit(err); });
+            this.formSchema.emit(this.jsf.schema);
+            this.formLayout.emit(this.jsf.layout);
+            this.onChanges.emit(this.objectWrap ? this.jsf.data['1'] : this.jsf.data);
+            var validateOnRender_1 = JsonPointer.get(this.jsf, '/formOptions/validateOnRender');
+            if (validateOnRender_1) {
+                var touchAll_1 = function (control) {
+                    if (validateOnRender_1 === true || hasValue(control.value)) {
+                        control.markAsTouched();
+                    }
+                    Object.keys(control.controls || {})
+                        .forEach(function (key) { return touchAll_1(control.controls[key]); });
+                };
+                touchAll_1(this.jsf.formGroup);
+                this.isValid.emit(this.jsf.isValid);
+                this.validationErrors.emit(this.jsf.ajvErrors);
+            }
+        }
+    };
+    JsonSchemaFormEditorComponent.decorators = [
+        { type: Component, args: [{
+                    selector: 'json-schema-form-editor',
+                    template: "\n    <div *ngFor=\"let stylesheet of stylesheets\">\n      <link rel=\"stylesheet\" [href]=\"stylesheet\">\n    </div>\n    <div *ngFor=\"let script of scripts\">\n      <script type=\"text/javascript\" [src]=\"script\"></script>\n    </div>\n    <form class=\"json-schema-form\" (ngSubmit)=\"submitForm()\">\n      <root-widget (onDrop)=\"retSchema($event)\" [layout]=\"jsf?.layout\" ></root-widget>\n    </form>\n    <div *ngIf=\"debug || jsf?.formOptions?.debug\">\n      Debug output: <pre>{{debugOutput}}</pre>\n    </div>",
+                    changeDetection: ChangeDetectionStrategy.OnPush,
+                    providers: [JsonSchemaFormService],
+                },] },
+    ];
+    JsonSchemaFormEditorComponent.ctorParameters = function () { return [
+        { type: ChangeDetectorRef, },
+        { type: FrameworkEditorLibraryService, },
+        { type: WidgetEditorLibraryService, },
+        { type: JsonSchemaFormService, },
+        { type: DomSanitizer, },
+    ]; };
+    JsonSchemaFormEditorComponent.propDecorators = {
+        "schema": [{ type: Input },],
+        "layout": [{ type: Input },],
+        "data": [{ type: Input },],
+        "options": [{ type: Input },],
+        "framework": [{ type: Input },],
+        "widgets": [{ type: Input },],
+        "form": [{ type: Input },],
+        "model": [{ type: Input },],
+        "JSONSchema": [{ type: Input },],
+        "UISchema": [{ type: Input },],
+        "formData": [{ type: Input },],
+        "ngModel": [{ type: Input },],
+        "language": [{ type: Input },],
+        "loadExternalAssets": [{ type: Input },],
+        "debug": [{ type: Input },],
+        "value": [{ type: Input },],
+        "onChanges": [{ type: Output },],
+        "onSubmit": [{ type: Output },],
+        "isValid": [{ type: Output },],
+        "validationErrors": [{ type: Output },],
+        "formSchema": [{ type: Output },],
+        "formLayout": [{ type: Output },],
+        "dataChange": [{ type: Output },],
+        "modelChange": [{ type: Output },],
+        "formDataChange": [{ type: Output },],
+        "ngModelChange": [{ type: Output },],
+    };
+    return JsonSchemaFormEditorComponent;
+}());
+
+var SharedModule = (function () {
+    function SharedModule() {
+    }
+    SharedModule.decorators = [
+        { type: NgModule, args: [{
+                    imports: [CommonModule, FormsModule, ReactiveFormsModule, DndModule.forRoot()],
+                    declarations: [OrderableDirective],
+                    exports: [DndModule, OrderableDirective],
+                    entryComponents: [],
+                    providers: [DragDropService]
+                },] },
+    ];
+    return SharedModule;
+}());
+
 var HiddenComponent = (function () {
     function HiddenComponent(jsf) {
         this.jsf = jsf;
@@ -13245,9 +15670,9 @@ var WidgetLibraryModule = (function () {
     };
     WidgetLibraryModule.decorators = [
         { type: NgModule, args: [{
-                    imports: [CommonModule, FormsModule, ReactiveFormsModule],
-                    declarations: BASIC_WIDGETS.concat([OrderableDirective]),
-                    exports: BASIC_WIDGETS.concat([OrderableDirective]),
+                    imports: [CommonModule, FormsModule, ReactiveFormsModule, SharedModule],
+                    declarations: BASIC_WIDGETS.slice(),
+                    exports: BASIC_WIDGETS.concat([SharedModule]),
                     entryComponents: BASIC_WIDGETS.slice(),
                     providers: [JsonSchemaFormService]
                 },] },
@@ -13272,7 +15697,7 @@ var NoFrameworkComponent = (function () {
     return NoFrameworkComponent;
 }());
 
-var __extends$1 = (undefined && undefined.__extends) || (function () {
+var __extends$4 = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -13283,7 +15708,7 @@ var __extends$1 = (undefined && undefined.__extends) || (function () {
     };
 })();
 var NoFramework = (function (_super) {
-    __extends$1(NoFramework, _super);
+    __extends$4(NoFramework, _super);
     function NoFramework() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.name = 'no-framework';
@@ -13347,6 +15772,117 @@ var JsonSchemaFormModule = (function () {
                 },] },
     ];
     return JsonSchemaFormModule;
+}());
+
+var HiddenEditorComponent = (function () {
+    function HiddenEditorComponent(jsf) {
+        this.jsf = jsf;
+        this.controlDisabled = false;
+        this.boundControl = false;
+    }
+    HiddenEditorComponent.prototype.ngOnInit = function () {
+        this.jsf.initializeControl(this);
+    };
+    HiddenEditorComponent.decorators = [
+        { type: Component, args: [{
+                    selector: 'hidden-widget',
+                    template: "\n    <input *ngIf=\"boundControl\"\n      [formControl]=\"formControl\"\n      [id]=\"'control' + layoutNode?._id\"\n      [name]=\"controlName\"\n      type=\"hidden\">\n    <input *ngIf=\"!boundControl\"\n      [disabled]=\"controlDisabled\"\n      [name]=\"controlName\"\n      [id]=\"'control' + layoutNode?._id\"\n      type=\"hidden\"\n      [value]=\"controlValue\">",
+                },] },
+    ];
+    HiddenEditorComponent.ctorParameters = function () { return [
+        { type: JsonSchemaFormService, },
+    ]; };
+    HiddenEditorComponent.propDecorators = {
+        "layoutNode": [{ type: Input },],
+        "layoutIndex": [{ type: Input },],
+        "dataIndex": [{ type: Input },],
+    };
+    return HiddenEditorComponent;
+}());
+
+var TabEditorComponent = (function () {
+    function TabEditorComponent(jsf) {
+        this.jsf = jsf;
+    }
+    TabEditorComponent.prototype.ngOnInit = function () {
+        this.options = this.layoutNode.options || {};
+    };
+    TabEditorComponent.decorators = [
+        { type: Component, args: [{
+                    selector: 'tab-widget',
+                    template: "\n    <div [class]=\"options?.htmlClass || ''\">\n      <root-widget\n        [dataIndex]=\"dataIndex\"\n        [layoutIndex]=\"layoutIndex\"\n        [layout]=\"layoutNode.items\"></root-widget>\n    </div>",
+                },] },
+    ];
+    TabEditorComponent.ctorParameters = function () { return [
+        { type: JsonSchemaFormService, },
+    ]; };
+    TabEditorComponent.propDecorators = {
+        "layoutNode": [{ type: Input },],
+        "layoutIndex": [{ type: Input },],
+        "dataIndex": [{ type: Input },],
+    };
+    return TabEditorComponent;
+}());
+
+var BASIC_WIDGETS$1 = [
+    AddReferenceEditorComponent, OneOfEditorComponent, ButtonEditorComponent, CheckboxEditorComponent,
+    CheckboxesEditorComponent, FileEditorComponent, HiddenEditorComponent, InputEditorComponent,
+    MessageEditorComponent, NoneEditorComponent, NumberEditorComponent, RadiosEditorComponent,
+    RootEditorComponent, SectionEditorComponent, SelectEditorComponent, SelectFrameworkEditorComponent,
+    SelectWidgetEditorComponent, SubmitEditorComponent, TabEditorComponent, TabsEditorComponent,
+    TemplateEditorComponent, TextareaEditorComponent
+];
+
+var WidgetEditorLibraryModule = (function () {
+    function WidgetEditorLibraryModule() {
+    }
+    WidgetEditorLibraryModule.forRoot = function () {
+        return {
+            ngModule: WidgetEditorLibraryModule,
+            providers: [JsonSchemaFormService]
+        };
+    };
+    WidgetEditorLibraryModule.decorators = [
+        { type: NgModule, args: [{
+                    imports: [CommonModule, FormsModule, ReactiveFormsModule, SharedModule],
+                    declarations: BASIC_WIDGETS$1.slice(),
+                    exports: BASIC_WIDGETS$1.concat([SharedModule]),
+                    entryComponents: BASIC_WIDGETS$1.slice(),
+                    providers: [JsonSchemaFormService]
+                },] },
+    ];
+    return WidgetEditorLibraryModule;
+}());
+
+var JsonSchemaFormEditorModule = (function () {
+    function JsonSchemaFormEditorModule() {
+    }
+    JsonSchemaFormEditorModule.forRoot = function () {
+        var frameworks = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            frameworks[_i] = arguments[_i];
+        }
+        var loadFrameworks = frameworks.length ?
+            frameworks.map(function (framework) { return framework.forRoot().providers[0]; }) :
+            [{ provide: Framework, useClass: NoFramework, multi: true }];
+        return {
+            ngModule: JsonSchemaFormEditorModule,
+            providers: [
+                JsonSchemaFormService, FrameworkEditorLibraryService, WidgetEditorLibraryService, WidgetEditorLibraryModule
+            ].concat(loadFrameworks)
+        };
+    };
+    JsonSchemaFormEditorModule.decorators = [
+        { type: NgModule, args: [{
+                    imports: [
+                        CommonModule, FormsModule, ReactiveFormsModule,
+                        WidgetEditorLibraryModule, NoFrameworkModule
+                    ],
+                    declarations: [JsonSchemaFormEditorComponent],
+                    exports: [JsonSchemaFormEditorComponent, WidgetEditorLibraryModule]
+                },] },
+    ];
+    return JsonSchemaFormEditorModule;
 }());
 
 var FlexLayoutRootComponent = (function () {
@@ -14256,7 +16792,7 @@ var MaterialDesignFrameworkComponent = (function () {
     return MaterialDesignFrameworkComponent;
 }());
 
-var __extends$2 = (undefined && undefined.__extends) || (function () {
+var __extends$5 = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -14267,7 +16803,7 @@ var __extends$2 = (undefined && undefined.__extends) || (function () {
     };
 })();
 var MaterialDesignFramework = (function (_super) {
-    __extends$2(MaterialDesignFramework, _super);
+    __extends$5(MaterialDesignFramework, _super);
     function MaterialDesignFramework() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.name = 'material-design';
@@ -14577,7 +17113,7 @@ var Bootstrap3FrameworkComponent = (function () {
     return Bootstrap3FrameworkComponent;
 }());
 
-var __extends$3 = (undefined && undefined.__extends) || (function () {
+var __extends$6 = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -14588,7 +17124,7 @@ var __extends$3 = (undefined && undefined.__extends) || (function () {
     };
 })();
 var Bootstrap3Framework = (function (_super) {
-    __extends$3(Bootstrap3Framework, _super);
+    __extends$6(Bootstrap3Framework, _super);
     function Bootstrap3Framework() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.name = 'bootstrap-3';
@@ -14844,7 +17380,7 @@ var Bootstrap4FrameworkComponent = (function () {
     return Bootstrap4FrameworkComponent;
 }());
 
-var __extends$4 = (undefined && undefined.__extends) || (function () {
+var __extends$7 = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -14855,7 +17391,7 @@ var __extends$4 = (undefined && undefined.__extends) || (function () {
     };
 })();
 var Bootstrap4Framework = (function (_super) {
-    __extends$4(Bootstrap4Framework, _super);
+    __extends$7(Bootstrap4Framework, _super);
     function Bootstrap4Framework() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.name = 'bootstrap-4';
@@ -14898,4 +17434,4 @@ var Bootstrap4FrameworkModule = (function () {
     return Bootstrap4FrameworkModule;
 }());
 
-export { MATERIAL_FRAMEWORK_COMPONENTS as ɵd, ANGULAR_MATERIAL_MODULES as ɵb, JSON_SCHEMA_FORM_VALUE_ACCESSOR as ɵa, BASIC_WIDGETS as ɵc, _executeValidators, _executeAsyncValidators, _mergeObjects, _mergeErrors, isDefined, hasValue, isEmpty, isString, isNumber, isInteger, isBoolean, isFunction, isObject, isArray, isDate, isMap, isSet, isPromise, isObservable, getType, isType, isPrimitive, toJavaScriptType, toSchemaType, _toPromise, toObservable, inArray, xor, addClasses, copy, forEach, forEachCopy, hasOwn, mergeFilteredObject, uniqueItems, commonItems, fixTitle, toTitleCase, JsonPointer, JsonValidators, buildSchemaFromLayout, buildSchemaFromData, getFromSchema, removeRecursiveReferences, getInputType, checkInlineType, isInputRequired, updateInputOptions, getTitleMapFromOneOf, getControlValidators, resolveSchemaReferences, getSubSchema, combineAllOf, fixRequiredArrayProperties, convertSchemaToDraft6, mergeSchemas, buildFormGroupTemplate, buildFormGroup, formatFormData, getControl, setRequiredFields, buildLayout, buildLayoutFromSchema, mapLayout, getLayoutNode, buildTitleMap, dateToString, stringToDate, findDate, OrderableDirective, JsonSchemaFormComponent, JsonSchemaFormService, JsonSchemaFormModule, WidgetLibraryService, WidgetLibraryModule, AddReferenceComponent, OneOfComponent, ButtonComponent, CheckboxComponent, CheckboxesComponent, FileComponent, HiddenComponent, InputComponent, MessageComponent, NoneComponent, NumberComponent, RadiosComponent, RootComponent, SectionComponent, SelectComponent, SelectFrameworkComponent, SelectWidgetComponent, SubmitComponent, TabComponent, TabsComponent, TemplateComponent, TextareaComponent, FrameworkLibraryService, Framework, NoFramework, NoFrameworkComponent, NoFrameworkModule, MaterialDesignFramework, FlexLayoutRootComponent, FlexLayoutSectionComponent, MaterialAddReferenceComponent, MaterialOneOfComponent, MaterialButtonComponent, MaterialButtonGroupComponent, MaterialCheckboxComponent, MaterialCheckboxesComponent, MaterialChipListComponent, MaterialDatepickerComponent, MaterialFileComponent, MaterialInputComponent, MaterialNumberComponent, MaterialRadiosComponent, MaterialSelectComponent, MaterialSliderComponent, MaterialStepperComponent, MaterialTabsComponent, MaterialTextareaComponent, MaterialDesignFrameworkComponent, MaterialDesignFrameworkModule, Bootstrap3Framework, Bootstrap3FrameworkComponent, Bootstrap3FrameworkModule, Bootstrap4Framework, Bootstrap4FrameworkComponent, Bootstrap4FrameworkModule };
+export { MATERIAL_FRAMEWORK_COMPONENTS as ɵf, ANGULAR_MATERIAL_MODULES as ɵb, JSON_SCHEMA_FORM_VALUE_ACCESSOR as ɵa, SharedModule as ɵc, BASIC_WIDGETS$1 as ɵe, BASIC_WIDGETS as ɵd, _executeValidators, _executeAsyncValidators, _mergeObjects, _mergeErrors, isDefined, hasValue, isEmpty, isString, isNumber, isInteger, isBoolean, isFunction, isObject, isArray, isDate, isMap, isSet, isPromise, isObservable, getType, isType, isPrimitive, toJavaScriptType, toSchemaType, _toPromise, toObservable, inArray, xor, addClasses, copy, forEach, forEachCopy, hasOwn, mergeFilteredObject, uniqueItems, commonItems, fixTitle, toTitleCase, JsonPointer, JsonValidators, buildSchemaFromLayout, buildSchemaFromData, getFromSchema, removeRecursiveReferences, getInputType, checkInlineType, isInputRequired, updateInputOptions, getTitleMapFromOneOf, getControlValidators, resolveSchemaReferences, getSubSchema, combineAllOf, fixRequiredArrayProperties, convertSchemaToDraft6, mergeSchemas, buildFormGroupTemplate, buildFormGroup, formatFormData, getControl, setRequiredFields, buildLayout, buildLayoutFromSchema, mapLayout, getLayoutNode, buildTitleMap, dateToString, stringToDate, findDate, OrderableDirective, JsonSchemaFormComponent, JsonSchemaFormEditorComponent, JsonSchemaFormService, JsonSchemaFormModule, JsonSchemaFormEditorModule, WidgetLibraryService, WidgetEditorLibraryService, WidgetLibraryModule, WidgetEditorLibraryModule, AddReferenceComponent, OneOfComponent, ButtonComponent, CheckboxComponent, CheckboxesComponent, FileComponent, HiddenComponent, InputComponent, MessageComponent, NoneComponent, NumberComponent, RadiosComponent, RootComponent, SectionComponent, SelectComponent, SelectFrameworkComponent, SelectWidgetComponent, SubmitComponent, TabComponent, TabsComponent, TemplateComponent, TextareaComponent, AddReferenceEditorComponent, OneOfEditorComponent, ButtonEditorComponent, CheckboxEditorComponent, CheckboxesEditorComponent, FileEditorComponent, HiddenEditorComponent, InputEditorComponent, MessageEditorComponent, NoneEditorComponent, NumberEditorComponent, RadiosEditorComponent, RootEditorComponent, SectionEditorComponent, SelectEditorComponent, SelectFrameworkEditorComponent, SelectWidgetEditorComponent, SubmitEditorComponent, TabEditorComponent, TabsEditorComponent, TemplateEditorComponent, TextareaEditorComponent, FrameworkLibraryService, FrameworkEditorLibraryService, Framework, NoFramework, NoFrameworkComponent, NoFrameworkModule, MaterialDesignFramework, FlexLayoutRootComponent, FlexLayoutSectionComponent, MaterialAddReferenceComponent, MaterialOneOfComponent, MaterialButtonComponent, MaterialButtonGroupComponent, MaterialCheckboxComponent, MaterialCheckboxesComponent, MaterialChipListComponent, MaterialDatepickerComponent, MaterialFileComponent, MaterialInputComponent, MaterialNumberComponent, MaterialRadiosComponent, MaterialSelectComponent, MaterialSliderComponent, MaterialStepperComponent, MaterialTabsComponent, MaterialTextareaComponent, MaterialDesignFrameworkComponent, MaterialDesignFrameworkModule, Bootstrap3Framework, Bootstrap3FrameworkComponent, Bootstrap3FrameworkModule, Bootstrap4Framework, Bootstrap4FrameworkComponent, Bootstrap4FrameworkModule };
