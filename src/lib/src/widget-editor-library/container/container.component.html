@@ -1,0 +1,9 @@
+<div *ngIf="hover" class="hover-borders horizontal top"></div>
+<div *ngIf="hover" class="hover-borders horizontal bottom"></div>
+<div *ngIf="hover" class="hover-borders vertical left"></div>
+<div *ngIf="hover" class="hover-borders vertical right"></div>
+
+<div class="action-remove">
+    <i class="fa fa-arrows-alt" title="Move" dnd-draggable [dragEnabled]="true" [dragData]="_dragData" (onDragSuccess)="onDragItem($event)"></i>
+    <i class="fa fa-times" (click)="selfDestruct($event)" title="Remove"></i>
+</div>

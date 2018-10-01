@@ -1,0 +1,7 @@
+:host .action-remove {
+    width: 115px;
+}
+
+:host .action-remove::before {
+    content: 'Container';
+}
